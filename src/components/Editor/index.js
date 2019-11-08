@@ -11,9 +11,11 @@ class Editor extends React.Component {
     //this.props.form.validateFields()
   }
 
-  handleImageClick = image =>
+
+
+  handleImageClick = evt =>
     this.froalaInstance.html.insert(
-      `<img alt="example" src=${image.src} id=${image.id} width=100% height=100% />`
+      `<img alt="example" src=${evt.target.src} id=${evt.target.id} width=100% height=100% />`
       , false)
 
   handleUpstream = froalaInstance =>
@@ -92,7 +94,7 @@ class Editor extends React.Component {
                                 key={item}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="http://vmp.hzinsights.com/"
+                                href={`http://vmp.hzinsights.com/article/${item.slice(0, item.indexOf('@'))}/`}
                               >{`【弘则策略】${item.slice(item.indexOf('@') + 1)}`}
                               </a>
                               <br />
@@ -177,6 +179,13 @@ class Editor extends React.Component {
                       <Input placeholder='请输入股票代码' />
                     )}
                   </Form.Item>
+                  <Form.Item hasFeedback >
+                    {this.props.form.getFieldDecorator('source', {
+                      rules: [{ required: false, message: '请输入数据来源:' }],
+                    })(
+                      <Input placeholder="请输入数据来源" addonBefore="Source:" />
+                    )}
+                  </Form.Item>
                   <Form.Item>
                     {this.props.form.getFieldDecorator('relatedNews', {
                       rules: [{ required: false, message: '请选择关联文章!' }],
@@ -195,6 +204,7 @@ class Editor extends React.Component {
                 }}
                 method={{
                   handleImageClick: this.handleImageClick,
+                  handleImageSearch: this.props.method.handleImageSearch,
                 }}
               ></EditorImage></div>
 

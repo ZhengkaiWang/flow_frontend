@@ -1,5 +1,5 @@
 import React from 'react'
-import { newsApi } from '../../utils/api'
+import { editorApi } from '../../utils/api'
 import { Checkbox, Pagination, Input, Spin,Icon, Button, Row, Col } from 'antd'
 
 class EditorRelatedNews extends React.Component {
@@ -42,10 +42,10 @@ class EditorRelatedNews extends React.Component {
 
   handleSearch = value => {
     this.setState({loading:true})
-    newsApi.listNews(
+    editorApi.listArticles(
       rspData => 
         this.setState({relatedNewsList:rspData, loading:false})
-      ,value)
+      ,{ search_keywords : value })
     }
 
   handleCheck = checkedList => {
@@ -80,9 +80,10 @@ class EditorRelatedNews extends React.Component {
           {this.state.relatedNewsList.map(item=>
             <Checkbox 
               style={{ marginLeft: 8, width:"100%" }} 
-              value={`${item.id}@${item.title}`} 
+              value={`${item.id}@${item.title}#${item.publish_date.slice(0, item.publish_date.indexOf('T'))}`} 
               key={item.id} >
-              {item.title}
+                
+              {`${item.title}【${item.publish_date.slice(0, item.publish_date.indexOf('T'))}】`}
             </Checkbox>
             )}
           {this.state.paged

@@ -54,6 +54,9 @@ class EditorContainer extends React.Component {
   handleSearch = (value) => 
     console.log(value.target.value)
 
+  handleImageSearch = value => {
+      editorApi.listImages(rspData => this.listImagesCallback(rspData) ,  {search_keywords:value})
+    }
 
   render() {
     
@@ -67,6 +70,7 @@ class EditorContainer extends React.Component {
         }} 
         method={{
           handleEditorSubmit : this.handleEditorSubmit,
+          handleImageSearch : this.handleImageSearch,
           handleSearch: this.handleSearch
         }}
       />

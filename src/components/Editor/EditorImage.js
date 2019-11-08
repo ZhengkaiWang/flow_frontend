@@ -4,15 +4,11 @@ import { Input } from 'antd';
 
 class EditorImage extends React.Component {
 
-  handleImageClick = image => {
-    this.props.method.handleImageClick(image.target)
-  }
-
   render() {  
     const { imageLoading } = this.props.data 
     return (
       <div>
-      <Input.Search placeholder="搜索图片" onSearch={value => console.log(value)} enterButton />
+      <Input.Search placeholder="搜索图片" onSearch={this.props.method.handleImageSearch} enterButton />
       <br />
       <br />
       {
@@ -28,7 +24,7 @@ class EditorImage extends React.Component {
                 ?<img alt='base64Img' src={item.image.slice(10, item.image.indexOf('class="')-2)} id={item.element}></img>  
                 :<img alt="urlImg" src={item.image} id={item.element}/>} 
             hoverable
-            onClick = {this.handleImageClick}
+            onClick = {this.props.method.handleImageClick}
           />                   
         )
       }

@@ -133,6 +133,22 @@ export const newsApi = {
 }
 
 export const editorApi = {
+
+  listArticles : async (callback, data) => {
+    try {
+      let rst = await pkgAxios({
+        url : 'articles/',
+        method : 'GET',
+        params : data
+      })
+      console.log(rst)
+      callback(rst.data)
+    } catch(err) {
+      console.log(err)
+    }
+  },
+
+
   listImages : async (callback, data) => {
     try {
       let rst = await pkgAxios({
