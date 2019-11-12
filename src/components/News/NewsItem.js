@@ -36,7 +36,6 @@ class NewsItem extends React.Component {
                 bodyStyle={{ padding: 12, paddingTop: 0 }}
                 bordered={false}
               >
-                <NewsImg></NewsImg>
                 <div dangerouslySetInnerHTML={{ __html: newsInfo.content }}></div>
               </Card>
             </Col>
@@ -48,8 +47,8 @@ class NewsItem extends React.Component {
               >
                 <Tag color="#108ee9">{newsInfo.category.category_name}</Tag>
                 <Tag color="#108ee9">{newsInfo.category.sub_category_name}</Tag>
-                {newsInfo.source&&<Tag color="#108ee9">{`Source:${newsInfo.source}`}</Tag>}
-                {newsInfo.stock&&<Tag color="#108ee9">{`股票代码:${newsInfo.stock}`}</Tag>}
+                {newsInfo.source && <Tag color="#108ee9">{`Source:${newsInfo.source}`}</Tag>}
+                {newsInfo.stock && <Tag color="#108ee9">{`股票代码:${newsInfo.stock}`}</Tag>}
                 <br />
                 <br />
                 <Typography.Paragraph>
@@ -57,14 +56,14 @@ class NewsItem extends React.Component {
                     {
                       newsInfo.relate.map(item =>
                         <div>
-                          <a 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
                             key={item.id}
                             href={`http://vmp.hzinsights.com/article/${item.relate_article_id}/`}
-                            >
+                          >
                             {`【弘则策略】${item.relate_article_title}【${item.relate_article_publish_date.slice(0, item.relate_article_publish_date.indexOf('T'))}】`}
-                            </a>
+                          </a>
                           <br />
                         </div>
                       )}
