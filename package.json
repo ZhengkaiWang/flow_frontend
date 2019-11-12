@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "antd": "^3.25.0",
+    "antd": "^3.25.1",
     "axios": "^0.19.0",
     "babel-plugin-import": "^1.12.2",
     "customize-cra": "^0.8.0",
@@ -19,7 +19,8 @@
     "react-froala-wysiwyg": "^2.8.5",
     "react-iframe": "^1.8.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.1"
+    "react-scripts": "3.1.1",
+    "webpack-ant-icon-loader": "^1.0.8"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -44,5 +45,6 @@
   },
   "devDependencies": {
     "webpack-bundle-analyzer": "^3.6.0"
-  }
+  },
+  "homepage": "http://127.0.0.1:8080/flow"
 }

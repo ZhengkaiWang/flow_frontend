@@ -9,4 +9,14 @@ const { override, fixBabelImports, addBundleVisualizer } = require('customize-cr
    addBundleVisualizer({
     analyzerMode: 'server',
   }),
+  (config) => {
+    config.module.rules.push({
+      loader: 'webpack-ant-icon-loader',
+      enforce: 'pre',
+      include: [
+        require.resolve('@ant-design/icons/lib/dist')
+      ]
+    });
+    return config;
+  },
  );

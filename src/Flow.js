@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 const Flow = () => 
   <UserContext.Provider value={{id:6074}}>
-    <Router>
+    <Router basename="/flow">
       <App />
     </Router>
   </UserContext.Provider> 
