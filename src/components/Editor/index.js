@@ -1,4 +1,5 @@
 import React from 'react'
+import urlSlug from 'url-slug'
 import { Form, Input, Button, Select, Row, Col, Card, Typography, Tag, Tabs, PageHeader } from 'antd'
 import EditorText from './EditorText'
 import EditorImage from './EditorImage'
@@ -11,9 +12,17 @@ class Editor extends React.Component {
     //this.props.form.validateFields()
   }
 
-  handleImageClick = evt =>
+  handleImageClick = item =>
     this.froalaInstance.html.insert(
-      `<img alt="example" src=${evt.target.src} id=${evt.target.id} width=100% height=100% />`
+      `<iframe 
+        src=http://127.0.0.1:8000/element/${item.element_id}/${urlSlug(item.element__title_en, { separator: '_' })}/|||||/
+        key=${item.element_id}
+        width="100%"
+        title="myId"
+        display="initial"
+        position="relative"
+        style={{ borderWidth:'0px' }}
+      />`
       , false)
 
   handleUpstream = froalaInstance =>
@@ -24,7 +33,7 @@ class Editor extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        this.props.method.handleEditorSubmit(values, this.state.post)
+        this.props.method.handleEditorSubmit(values)
         //this.props.form.resetFields()
       }
     })
@@ -81,8 +90,8 @@ class Editor extends React.Component {
                   >
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].category_name}</Tag>}
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].sub_category_name}</Tag>}
-                    {formValue.source&&<Tag color="#108ee9">{`Source:${formValue.source}`}</Tag>}
-                    {formValue.stock&&<Tag color="#108ee9">{`股票代码:${formValue.stock}`}</Tag>}
+                    {formValue.source && <Tag color="#108ee9">{`Source:${formValue.source}`}</Tag>}
+                    {formValue.stock && <Tag color="#108ee9">{`股票代码:${formValue.stock}`}</Tag>}
                     <br />
                     <br />
                     <Typography.Paragraph>

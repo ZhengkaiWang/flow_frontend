@@ -6,7 +6,7 @@ import { message } from 'antd'
 class NewsContainer extends React.Component {
   constructor(props) {
     super(props)
-    const ws = new WebSocket("ws://192.168.200.116:8000/ws/news/");
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws/news/");
     this.state = {
       newsInfoList: [],
       other: 'other',
@@ -18,20 +18,20 @@ class NewsContainer extends React.Component {
   handleListNews = (data) => {
     this.setState({ newsInfoList: [] })
     data.forEach(
-      element => {
+      item => {
         const newsItem = {
-          id: element['id'],
-          time: element['create_date'],
-          content: element['content'],
-          title: element['title'],
-          /*fimgSrc : "http://vmp.hzinsights.com/element/138/10y_treasury/2019-09-12,2019-09-13|||||/",*/
-          like: element['like'],
-          comment: element.comment,
+          id: item['id'],
+          time: item['create_date'],
+          content: item['content'],
+          title: item['title'],
+          /*fimgSrc : "http://vmp.hzinsights.com/item/138/10y_treasury/2019-09-12,2019-09-13|||||/",*/
+          like: item['like'],
+          comment: item.comment,
           avatar: 'https://i.loli.net/2019/10/24/mMZX3ic1RqHnzsj.png',
-          category: element['category'],
-          relate: element['relate'],
-          stock: element['stock'],
-          source: element['source']
+          category: item['category'],
+          relate: item['relate'],
+          stock: item['stock'],
+          source: item['source']
         }
         this.setState({
           newsInfoList: [...this.state.newsInfoList, newsItem]

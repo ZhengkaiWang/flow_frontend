@@ -1,9 +1,10 @@
 import axios from 'axios'
 import qs from 'qs'
+import Cookies from 'js-cookie'
 
 //axios.defaults.withCredentials=true;
 const pkgAxios = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/v1/flow/',  
+    baseURL: 'http://127.0.0.1:8000/api/v1/flow',  
     timeout: 500000,
     withCredentials: true,
 })
@@ -13,6 +14,7 @@ pkgAxios.interceptors.request.use(config => {
         ? config.data = qs.stringify({...config.data})
         : config.params = {...config.params};
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
     //config.headers['Content-Type'] = 'multipart/form-data'
     return config;
 }, error => {
