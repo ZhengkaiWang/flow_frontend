@@ -21,7 +21,7 @@ class Editor extends React.Component {
         title="myId"
         display="initial"
         position="relative"
-        style={{ borderWidth:'0px' }}
+        style={{ border-width:'0px' }}
       />`
       , false)
 
