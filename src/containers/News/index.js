@@ -6,7 +6,7 @@ import { message } from 'antd'
 class NewsContainer extends React.Component {
   constructor(props) {
     super(props)
-    const ws = new WebSocket("ws://192.168.200.116:8000/ws/testws/w/");
+    const ws = new WebSocket("ws://192.168.200.116:8000/ws/news/");
     this.state = {
       newsInfoList: [],
       other: 'other',
@@ -28,7 +28,10 @@ class NewsContainer extends React.Component {
           like: element['like'],
           comment: element.comment,
           avatar: 'https://i.loli.net/2019/10/24/mMZX3ic1RqHnzsj.png',
-          category: element['category']
+          category: element['category'],
+          relate: element['relate'],
+          stock: element['stock'],
+          source: element['source']
         }
         this.setState({
           newsInfoList: [...this.state.newsInfoList, newsItem]

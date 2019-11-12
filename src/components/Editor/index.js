@@ -11,8 +11,6 @@ class Editor extends React.Component {
     //this.props.form.validateFields()
   }
 
-
-
   handleImageClick = evt =>
     this.froalaInstance.html.insert(
       `<img alt="example" src=${evt.target.src} id=${evt.target.id} width=100% height=100% />`
@@ -26,8 +24,8 @@ class Editor extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        this.props.method.handleEditorSubmit(values)
-        this.props.form.resetFields()
+        this.props.method.handleEditorSubmit(values, this.state.post)
+        //this.props.form.resetFields()
       }
     })
   }
@@ -83,6 +81,8 @@ class Editor extends React.Component {
                   >
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].category_name}</Tag>}
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].sub_category_name}</Tag>}
+                    {formValue.source&&<Tag color="#108ee9">{`Source:${formValue.source}`}</Tag>}
+                    {formValue.stock&&<Tag color="#108ee9">{`股票代码:${formValue.stock}`}</Tag>}
                     <br />
                     <br />
                     <Typography.Paragraph>
@@ -173,7 +173,7 @@ class Editor extends React.Component {
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="关联信息设置" key="1">
                   <Form.Item hasFeedback >
-                    {this.props.form.getFieldDecorator('code', {
+                    {this.props.form.getFieldDecorator('stock', {
                       rules: [{ required: false, message: '请输入股票代码!' }],
                     })(
                       <Input placeholder='请输入股票代码' />

@@ -3,7 +3,7 @@ import qs from 'qs'
 
 //axios.defaults.withCredentials=true;
 const pkgAxios = axios.create({
-    baseURL: 'http://127.0.0.1:8080/api/v1/flow/',  
+    baseURL: 'http://127.0.0.1:8000/api/v1/flow/',  
     timeout: 500000,
     withCredentials: true,
 })

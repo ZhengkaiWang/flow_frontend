@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from "react-router-dom";
 import { Card, Popconfirm, message, Button} from 'antd'
 
 class CheckItem extends React.Component {
@@ -57,7 +57,7 @@ class CheckItem extends React.Component {
           title={`${newsInfo.title}   ${newsInfo.time.slice(newsInfo.time.indexOf('-') + 1, newsInfo.time.indexOf('T'))}  ${newsInfo.time.substr(newsInfo.time.indexOf('T') + 1, 8)}`}
           actions={[
             publish,
-            <Button>编辑(未完成功能)</Button>
+            <Link to={`/editor/${newsInfo.id}/`}><Button>编辑(未完成功能)</Button></Link>
             ,
             <Popconfirm
               title="确认删除此条新闻？"

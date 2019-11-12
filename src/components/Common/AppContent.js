@@ -17,12 +17,12 @@ const AppContent = () =>
     margin: 0,
     }}
   >
-    <Route path='/news/:id' component={SingleNews}></Route>
+    <Route path='/news/:id' component={SingleNews} />
     <Route exact path="/" component={News} />
     <Route exact path='/news' component={News} />
-    
-    <Route path='/editor' component={Editor} />
-    <Route path='/check' component={CheckContainer} />
+    <Route path='/editor/:id' component={Editor} />
+    <Route exact path='/editor' component={Editor} />
+    <Route exact path='/check' component={CheckContainer} />
   </Layout.Content>
 
 export default AppContent;

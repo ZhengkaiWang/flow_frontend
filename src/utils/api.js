@@ -190,16 +190,10 @@ export const editorApi = {
       console.log(err)
     }
   },
-
-  postNews : async (callback, data) => {
-
-    data.content = data.content.model
-    data.relatedNews = data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
-
-    /*
+  postRelatedArticles : async (data,callback) => {
     try {
       let rst = await pkgAxios({
-        url : 'news/',
+        url : `news/${data.news_id}/related_articles/`,
         method : 'POST',
         data : data
       })
@@ -207,7 +201,25 @@ export const editorApi = {
       callback(rst.data)
     } catch(err) {
       console.log(err)
-    }*/
+    }
+  },
+  postNews : async (data,callback) => {
+
+    const wrappedData = {...data}
+    wrappedData.content = data.content.model
+    wrappedData.relatedNews = data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
+    console.log(data,wrappedData)
+    try {
+      let rst = await pkgAxios({
+        url : 'news/',
+        method : 'POST',
+        data : wrappedData
+      })
+      console.log(rst)
+      callback(rst.data, wrappedData)
+    } catch(err) {
+      console.log(err)
+    }
   }
 }
 
