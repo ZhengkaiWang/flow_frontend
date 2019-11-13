@@ -15,13 +15,13 @@ class Editor extends React.Component {
   handleImageClick = item =>
     this.froalaInstance.html.insert(
       `<iframe 
-        src=http://127.0.0.1:8000/element/${item.element_id}/${urlSlug(item.element__title_en, { separator: '_' })}/|||||/
+        src=http://106.14.218.63:8000/element/${item.element_id}/${urlSlug(item.element__title_en, { separator: '_' })}/|||||/
         key=${item.element_id}
         width="100%"
         title="myId"
         display="initial"
         position="relative"
-        style={{ border-width:'0px' }}
+        style="border-width:0px;"
       />`
       , false)
 
@@ -90,6 +90,8 @@ class Editor extends React.Component {
                   >
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].category_name}</Tag>}
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].sub_category_name}</Tag>}
+                    <br />
+                    <br />
                     {formValue.source && <Tag color="#108ee9">{`Source:${formValue.source}`}</Tag>}
                     {formValue.stock && <Tag color="#108ee9">{`股票代码:${formValue.stock}`}</Tag>}
                     <br />

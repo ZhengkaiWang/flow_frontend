@@ -4,9 +4,6 @@ import { Input } from 'antd';
 
 class EditorImage extends React.Component {
 
-  handleImageClick = (id, src, title) =>
-    this.props.handleImageClick(`http://127.0.0.1:8000/element/${id}/${title}/|||||/`)
-
   render() {
 
     const { imageLoading } = this.props.data
@@ -21,6 +18,7 @@ class EditorImage extends React.Component {
               loading={imageLoading}
               key={item.element_id}
               style={{ margin: 0, padding: 0 }}
+              bodyStyle={{textAlign:"center", fontWeight:"bold"}}
               cover={
                 imageLoading
                   ? ''
@@ -28,8 +26,9 @@ class EditorImage extends React.Component {
                     ? <img alt='base64Img' src={item.image.slice(10, item.image.indexOf('class="') - 2)} id={item.element_id}></img>
                     : <img alt="urlImg" src={item.image} id={item.element_id} />}
               hoverable
-              onClick={evt => this.props.method.handleImageClick(item)}
-            />
+              onClick={evt => this.props.method.handleImageClick(item)}>
+              {item.element__title}
+              </Card>
           )
         }
 

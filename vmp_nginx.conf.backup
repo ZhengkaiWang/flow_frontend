@@ -1,0 +1,47 @@
+# port for production
+upstream django {
+    server 0.0.0.0:8001;
+    server 0.0.0.0:8002;
+}
+
+# development server
+server {
+    listen      8000;
+    server_name 106.14.218.63;
+    charset     utf-8;
+    client_max_body_size 128M;
+    large_client_header_buffers 4 1M;
+
+    location /media  {
+        alias /home/development/Django/verticalmind_frontend/media;
+    }
+    location /static {
+        alias /home/development/Django/verticalmind_frontend/static;
+    }
+    location / {
+        # proxy_set_header Host $host;
+	uwsgi_pass  0.0.0.0:8005;
+        include     /home/development/Django/config/uwsgi_params;
+    }
+}
+
+# production server
+server {
+    listen      80;
+    server_name 106.14.218.63;
+    charset     utf-8;
+    client_max_body_size 128M;
+    large_client_header_buffers 4 1M;
+	
+    location /media  {
+        alias /home/production/Django/verticalmind_frontend/media;
+    }
+    location /static {
+        alias /home/production/Django/verticalmind_frontend/static;
+    }
+    location / {
+	# proxy_set_header Host $host;
+        uwsgi_pass  django;
+        include     /home/development/Django/config/uwsgi_params;
+    }
+}

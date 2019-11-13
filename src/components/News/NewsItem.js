@@ -47,6 +47,8 @@ class NewsItem extends React.Component {
               >
                 <Tag color="#108ee9">{newsInfo.category.category_name}</Tag>
                 <Tag color="#108ee9">{newsInfo.category.sub_category_name}</Tag>
+                <br />
+                <br />
                 {newsInfo.source && <Tag color="#108ee9">{`Source:${newsInfo.source}`}</Tag>}
                 {newsInfo.stock && <Tag color="#108ee9">{`股票代码:${newsInfo.stock}`}</Tag>}
                 <br />

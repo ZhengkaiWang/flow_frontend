@@ -6,7 +6,7 @@ import { message } from 'antd'
 class NewsContainer extends React.Component {
   constructor(props) {
     super(props)
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/news/");
+    const ws = new WebSocket("ws://106.14.218.63:8000/ws/news/");
     this.state = {
       newsInfoList: [],
       other: 'other',
