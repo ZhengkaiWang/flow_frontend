@@ -1,5 +1,6 @@
 import React from 'react'
 import { editorApi } from '../../utils/api'
+import generateArticleTitle from '../../utils/generateArticleTitle'
 import { Checkbox, Pagination, Input, Spin,Icon, Button, Row, Col } from 'antd'
 
 class EditorRelatedNews extends React.Component {
@@ -10,8 +11,8 @@ class EditorRelatedNews extends React.Component {
       return {
         ...({
           relatedNewsList:prevState.relatedNewsList,
-          loading: prevState.loading,
-          paged: prevState.paged,
+          articleLoading: prevState.articleLoading,
+          articlePage: prevState.articlePage,
           ...(nextProps.value || {})
         })
       }
@@ -23,9 +24,10 @@ class EditorRelatedNews extends React.Component {
     super(props)
     const value = props.value || {}
     this.state = {
-      relatedNewsList: [],
-      loading: false,
-      paged: false,
+      relatedNewsList: {results:[]},
+      articleLoading: true,
+      articlePage: 1,
+      articlePageCount: 1,
       checkedList : value.checkedList || []
     }
   }
@@ -40,12 +42,21 @@ class EditorRelatedNews extends React.Component {
     }
   }
 
-  handleSearch = value => {
-    this.setState({loading:true})
+
+  handleArticlePage = page => {
+    this.setState({articleLoading: true})
     editorApi.listArticles(
       rspData => 
-        this.setState({relatedNewsList:rspData, loading:false})
-      ,{ search_keywords : value })
+        this.setState({relatedNewsList:rspData, articleLoading:false}),
+        {page:page})
+  }
+
+  handleSearch = value => {
+    this.setState({articleLoading:true})
+    editorApi.listArticles(
+      rspData => 
+        this.setState({relatedNewsList:rspData, articleLoading:false, articlePageCount:rspData.count}),
+        {search_keywords:value})
     }
 
   handleCheck = checkedList => {
@@ -71,24 +82,30 @@ class EditorRelatedNews extends React.Component {
         <Col span={6}>
           <Button onClick={this.handleCancel}>清空</Button>
         </Col></Row>
-        <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} spinning={this.state.loading}>
+        <Spin indicator={<Icon type="Loading" style={{ fontSize: 24 }} spin />} spinning={this.state.articleLoading}>
         <Checkbox.Group 
           style={{ marginTop: 12 }} 
           onChange={this.handleCheck}
           value={this.state.checkedList}
           >
-          {this.state.relatedNewsList.map(item=>
+          {this.state.relatedNewsList.results.map(item=>
             <Checkbox 
               style={{ marginLeft: 8, width:"100%" }} 
-              value={`${item.id}@${item.title}#${item.publish_date.slice(0, item.publish_date.indexOf('T'))}`} 
+              value={`${item.id}@${item.title}#${item.publish_date}&${item.update_frequency}^${item.show_category_in_title}`} 
               key={item.id} >
-                
-              {`${item.title}【${item.publish_date.slice(0, item.publish_date.indexOf('T'))}】`}
+              {generateArticleTitle(item)}
             </Checkbox>
             )}
-          {this.state.paged
-            ?<Pagination style={{ textAlign: "center", marginTop: 12 }} size="small" defaultCurrent={2} total={50} />
-            :undefined}
+          <Pagination 
+            style={{textAlign:"center", marginTop:12}} 
+            simple 
+            defaultCurrent={1} 
+            pageSize={20}
+            hideOnSinglePage={true}
+            total={this.state.articlePageCount} 
+            onChange={this.handleArticlePage}
+          />
+
         </Checkbox.Group>
         </Spin>
         </div>

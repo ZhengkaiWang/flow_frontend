@@ -7,7 +7,7 @@ upstream django {
 # development server
 server {
     listen      8000;
-    server_name 106.14.218.63;
+    server_name 127.0.0.1;
     charset     utf-8;
     client_max_body_size 128M;
     large_client_header_buffers 4 1M;
@@ -28,7 +28,7 @@ server {
 # production server
 server {
     listen      80;
-    server_name 106.14.218.63;
+    server_name 127.0.0.1;
     charset     utf-8;
     client_max_body_size 128M;
     large_client_header_buffers 4 1M;

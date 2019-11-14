@@ -6,9 +6,11 @@ const { override, fixBabelImports, addBundleVisualizer } = require('customize-cr
      libraryDirectory: 'es',
      style: 'css',
    }),
-   addBundleVisualizer({
-    analyzerMode: 'server',
-  }),
+  //  addBundleVisualizer({
+  //   analyzerMode: "static",
+  //   reportFilename: "report.html"
+  //   //analyzerMode: 'server',
+  // }),
   (config) => {
     config.module.rules.push({
       loader: 'webpack-ant-icon-loader',

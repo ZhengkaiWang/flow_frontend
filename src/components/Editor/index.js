@@ -1,10 +1,12 @@
 import React from 'react'
 import urlSlug from 'url-slug'
-import { Form, Input, Button, Select, Row, Col, Card, Typography, Tag, Tabs, PageHeader } from 'antd'
+import { Cascader, Form, Input, Button, Select, Row, Col, Card, Typography, Tag, Tabs, PageHeader } from 'antd'
 import EditorText from './EditorText'
+import Category from '../News/Category'
 import EditorImage from './EditorImage'
 import EditorRelatedNews from './EditorRelatedNews'
 import categoryStatic from './CategoryStatic'
+import generateArticleTitle from '../../utils/generateArticleTitle'
 
 class Editor extends React.Component {
 
@@ -15,13 +17,12 @@ class Editor extends React.Component {
   handleImageClick = item =>
     this.froalaInstance.html.insert(
       `<iframe 
-        src=http://106.14.218.63:8000/element/${item.element_id}/${urlSlug(item.element__title_en, { separator: '_' })}/|||||/
+        src=http://127.0.0.1:8000/element/${item.element_id}/${urlSlug(item.element__title_en, { separator: '_' })}/|||||/
         key=${item.element_id}
         width="100%"
-        title="myId"
         display="initial"
         position="relative"
-        style="border-width:0px;"
+        style="border-width:0px;height:400px;"
       />`
       , false)
 
@@ -41,6 +42,7 @@ class Editor extends React.Component {
 
   render() {
     const formValue = this.props.form.getFieldsValue()
+
     return (
 
       <Form
@@ -88,8 +90,8 @@ class Editor extends React.Component {
                     bodyStyle={{ padding: 0, paddingLeft: 12 }}
                     bordered={false}
                   >
-                    {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].category_name}</Tag>}
-                    {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category].sub_category_name}</Tag>}
+                    {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category[1]].category_name}</Tag>}
+                    {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category[1]].sub_category_name}</Tag>}
                     <br />
                     <br />
                     {formValue.source && <Tag color="#108ee9">{`Source:${formValue.source}`}</Tag>}
@@ -106,7 +108,13 @@ class Editor extends React.Component {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 href={`http://vmp.hzinsights.com/article/${item.slice(0, item.indexOf('@'))}/`}
-                              >{`【弘则策略】${item.slice(item.indexOf('@') + 1)}`}
+                              >{generateArticleTitle({
+                                title:item.slice(item.indexOf('@')+1,item.indexOf('#')),
+                                publish_date:item.slice(item.indexOf('#')+1,item.indexOf('&')),
+                                update_frequency:item.slice(item.indexOf('&')+1,item.indexOf('^')),
+                                show_category_in_title:item.slice(item.indexOf('^')+1)
+                              }
+                              )}
                               </a>
                               <br />
                             </div>
@@ -169,25 +177,11 @@ class Editor extends React.Component {
                     {this.props.form.getFieldDecorator('request_category', {
                       rules: [{ required: true, message: '请选择类别!' }],
                     })(
-                      <Select placeholder={'请选择分类'}>
-                        {
-                          this.props.data.categoryList.map(item =>
-                            <Select.Option key={item.id}>
-                              {item.sub_category_name}
-                            </Select.Option>
-                          )
-                        }
-                      </Select>
-                    )}
-                  </Form.Item>
-
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="关联信息设置" key="1">
-                  <Form.Item hasFeedback >
-                    {this.props.form.getFieldDecorator('stock', {
-                      rules: [{ required: false, message: '请输入股票代码!' }],
-                    })(
-                      <Input placeholder='请输入股票代码' />
+                      <Cascader
+                        placeholder="请选择分类"
+                        options={Category}
+                        expandTrigger="hover"
+                      />
                     )}
                   </Form.Item>
                   <Form.Item hasFeedback >
@@ -195,6 +189,15 @@ class Editor extends React.Component {
                       rules: [{ required: false, message: '请输入数据来源:' }],
                     })(
                       <Input placeholder="请输入数据来源" addonBefore="Source:" />
+                    )}
+                  </Form.Item>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="关联信息设置" key="1">
+                  <Form.Item hasFeedback >
+                    {this.props.form.getFieldDecorator('stock', {
+                      rules: [{ required: false, message: '请输入股票代码!' }],
+                    })(
+                      <Input placeholder='请输入股票代码' />
                     )}
                   </Form.Item>
                   <Form.Item>
@@ -211,11 +214,14 @@ class Editor extends React.Component {
               <EditorImage
                 data={{
                   imageLoading: this.props.data.imageLoading,
-                  imageList: this.props.data.imageList
+                  imageList: this.props.data.imageList,
+                  imagePage: this.props.data.imagePage,
+                  imagePageCount: this.props.data.imagePageCount,
                 }}
                 method={{
                   handleImageClick: this.handleImageClick,
                   handleImageSearch: this.props.method.handleImageSearch,
+                  handleImagePage: this.props.method.handleImagePage,
                 }}
               ></EditorImage></div>
 

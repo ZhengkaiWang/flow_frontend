@@ -1,6 +1,5 @@
 import React from 'react'
-import { Card } from 'antd'
-import { Input } from 'antd';
+import { Card, Pagination, Input } from 'antd'
 
 class EditorImage extends React.Component {
 
@@ -31,7 +30,15 @@ class EditorImage extends React.Component {
               </Card>
           )
         }
-
+      <Pagination 
+        style={{marginTop:"12px", textAlign:"center"}}
+        defaultCurrent={this.props.data.imagePage} 
+        total={this.props.data.imagePageCount}
+        hideOnSinglePage={true}
+        pageSize={10}
+        simple
+        onChange={this.props.method.handleImagePage}
+      />
       </div>
     )
   }

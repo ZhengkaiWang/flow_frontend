@@ -75,23 +75,31 @@ class NewsItem extends React.Component {
             </Col>
           </Row>
         </Card>
+        <Row>
+          <Col span={24} lg={12}>
+            <div style={{ textAlign: "left", marginLeft: 12 }}>
+              {newsInfo.source &&<span style={{fontWeight:"bold", fontStyle:"italic"}}>{`Source:${newsInfo.source}`}</span>}
+            </div>
+          </Col>
+          <Col span={24} lg={12}>
+            <div style={{ textAlign: "right" }} >
+              <span style={{ marginRight: 24 }}>
+                <NewsLike
+                  data={{ like: newsInfo.like, user: this.props.data.user, newsId: newsInfo.id }}
+                  method={{ onNewsLikeClick: this.props.method.onNewsLikeClick }}
+                />
+              </span>
+              <span style={{ marginRight: 24 }} onClick={this.onIconClick}>
+                <Tooltip title="评论">
+                  <Icon type="message" key="comment" style={{ marginRight: 8 }} />
+                  {`${newsInfo.comment.length - 1}`}</Tooltip>
+              </span>
+              <span style={{ marginRight: 24 }}>
+                <Tooltip title="分享"><Icon type="share-alt" key="share" onClick={() => message.success('分享成功')} /></Tooltip>
+              </span>
+            </div></Col>
 
-        <div style={{ textAlign: "right" }} >
-          <span style={{ marginRight: 24 }}>
-            <NewsLike
-              data={{ like: newsInfo.like, user: this.props.data.user, newsId: newsInfo.id }}
-              method={{ onNewsLikeClick: this.props.method.onNewsLikeClick }}
-            />
-          </span>
-          <span style={{ marginRight: 24 }} onClick={this.onIconClick}>
-            <Tooltip title="评论">
-              <Icon type="message" key="comment" style={{ marginRight: 8 }} />
-              {`${newsInfo.comment.length - 1}`}</Tooltip>
-          </span>
-          <span style={{ marginRight: 24 }}>
-            <Tooltip title="分享"><Icon type="share-alt" key="share" onClick={() => message.success('分享成功')} /></Tooltip>
-          </span>
-        </div>
+        </Row>
         {this.state.commentVisible
           ? <Card style={{ margin: 20, marginTop: 0, padding: 0 }} bordered={false} >
             <NewsTreeComment

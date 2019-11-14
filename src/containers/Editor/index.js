@@ -11,43 +11,54 @@ class EditorContainer extends React.Component {
       authorList: [{ id: 'initId', author: 'initAuthor' }],
       categoryList: [{ id: 'initId', sub_category_name: 'initSub_category_name' }],
       imageList: [{ element: 'initElement', image: 'initImage' }],
-      imageLoading: true
+      imageLoading: true,
+      imagePage: 1,
+      imagePageCount: 1,
+      imageSearchKeywords: ''
     }
   }
 
   componentDidMount() {
     console.log(this.props.match.params.id)
-    editorApi.listAuthors(this.listAuthorsCallback, {})
-    editorApi.listCategorys(this.listCategorysCallback, {})
-    editorApi.listImages(this.listImagesCallback, {})
+    this.listAuthors()
+    this.listImages()
+    this.listCategorys()
   }
 
-  componentWillUnmount() {
-  }
-
-  listImagesCallback = rspData => {
-    this.setState({ imageList: [] })
-    let rspImageList = []
-    rspData.forEach(element => {
-      rspImageList = rspImageList.concat(element)
-    })
-    this.setState({ imageList: rspImageList, imageLoading: false })
-  }
-
-  listAuthorsCallback = rspData => {
-    this.setState({ authorList: [] })
-    rspData.forEach(element => {
-      this.setState({ authorList: this.state.authorList.concat(element) })
+  listImages = data => {
+    editorApi.listImages(data,
+    rspData => {
+      let rspImageList = []
+      rspData.results.forEach(element => {
+        rspImageList = rspImageList.concat(element)
+      })
+      this.setState({
+        imageList: rspImageList,
+        imageLoading: false,
+        imagePageCount: rspData.count
+      })
     })
   }
 
-  listCategorysCallback = rspData => {
-    this.setState({ categoryList: [] })
-    rspData.forEach(element => {
-      this.setState({ categoryList: this.state.categoryList.concat(element) })
+  listAuthors = data => {
+    editorApi.listAuthors(data, rspData => {
+      this.setState({ authorList: [] })
+      rspData.forEach(element => {
+        this.setState({ authorList: this.state.authorList.concat(element) })
+      })
     })
   }
-  //
+
+  listCategorys = data => {
+    editorApi.listCategorys(data, rspData => {
+      this.setState({ categoryList: [] })
+      rspData.forEach(element => {
+        this.setState({ categoryList: this.state.categoryList.concat(element) })
+      })
+    })
+
+  }
+
   handleEditorSubmit = data =>
     editorApi.postNews(data,
       (rspData, wrappedData) => {
@@ -63,11 +74,14 @@ class EditorContainer extends React.Component {
       }
     )
 
-  handleSearch = (value) =>
-    console.log(value.target.value)
+  handleImagePage = page => {
+    this.setState({imageLoading: true, imagePage:page})
+    this.listImages({page: page})
+  }
 
   handleImageSearch = value => {
-    editorApi.listImages(rspData => this.listImagesCallback(rspData), { search_keywords: value })
+    this.setState({imageLoading: true, imageSearchKeywords: value })
+    this.listImages({search_keywords: value})
   }
 
   render() {
@@ -79,12 +93,14 @@ class EditorContainer extends React.Component {
           categoryList: this.state.categoryList,
           imageList: this.state.imageList,
           imageLoading: this.state.imageLoading,
-          id: this.props.match.params.id
+          id: this.props.match.params.id,
+          imagePage: this.state.imagePage,
+          imagePageCount: this.state.imagePageCount
         }}
         method={{
           handleEditorSubmit: this.handleEditorSubmit,
           handleImageSearch: this.handleImageSearch,
-          handleSearch: this.handleSearch
+          handleImagePage: this.handleImagePage
         }}
       />
     )

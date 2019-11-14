@@ -149,7 +149,7 @@ export const editorApi = {
   },
 
 
-  listImages : async (callback, data) => {
+  listImages : async (data, callback) => {
     try {
       let rst = await pkgAxios({
         url : 'images/',
@@ -163,7 +163,7 @@ export const editorApi = {
     }
   },
 
-  listAuthors : async (callback, data) => {
+  listAuthors : async (data, callback) => {
     try {
       let rst = await pkgAxios({
         url : 'authors/',
@@ -177,7 +177,7 @@ export const editorApi = {
     }
   },
 
-  listCategorys : async (callback, data) => {
+  listCategorys : async (data, callback) => {
     try {
       let rst = await pkgAxios({
         url : 'categorys/',
@@ -207,7 +207,8 @@ export const editorApi = {
 
     const wrappedData = {...data}
     wrappedData.content = data.content.model
-    wrappedData.relatedNews = data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
+    wrappedData.relatedNews = data.relatedNews===undefined?[]:data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
+    wrappedData.request_category = data.request_category[1]
     console.log(data,wrappedData)
     try {
       let rst = await pkgAxios({
