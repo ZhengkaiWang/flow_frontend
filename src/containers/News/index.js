@@ -2,6 +2,7 @@ import React from 'react';
 import News from '../../components/News';
 import { newsApi } from '../../utils/api'
 import { message } from 'antd'
+import categoryStatic from '../../components/Editor/CategoryStatic'
 
 class NewsContainer extends React.Component {
   constructor(props) {
@@ -127,7 +128,7 @@ class NewsContainer extends React.Component {
     const data = {
       search_category : value[0],
       search_sub_category : value.length===2
-        ?value[1]
+        ?categoryStatic[value[1]].sub_category_name
         :''
     }
     
