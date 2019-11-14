@@ -52,7 +52,8 @@ class NewsTreeComment extends React.Component {
     this.setState({
       commentFlag: true,
       commentKey: evt.target.id,
-      reply: evt.target.title
+      //reply: evt.target.title
+      reply: "评论"
     })
   }
 

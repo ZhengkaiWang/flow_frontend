@@ -36,7 +36,7 @@ class NewsTreeCommentForm extends React.Component {
           })(
             <Input
               allowClear
-              style={{ width: 600 }}
+              style={{ }}
               //suffix={<Icon type="edit" />}
               addonBefore={`@${this.props.data.reply}:`}
             />,

@@ -1,11 +1,14 @@
 import React from 'react'
 import NewsTreeComment from './NewsComment'
 import NewsLike from './NewsLike'
-import NewsImg from './NewsImg'
+//import NewsImg from './NewsImg'
+import { ScreenContext } from '../../utils/Screen'
 import { Link } from 'react-router-dom'
 import { Icon, Card, Row, Col, message, Typography, Tag, Tooltip } from 'antd'
 
 class NewsItem extends React.Component {
+
+  static contextType = ScreenContext
 
   state = { commentVisible: false }
   //onNewsLikeClick = () => {this.props.method.onNewsLikeClick(this.props.data.newsInfo.like)} 
@@ -16,6 +19,7 @@ class NewsItem extends React.Component {
   }
 
   render() {
+    const fontSize = this.context.device==="mobile"?"12px":"14px"
     const newsInfo = this.props.data.newsInfo
     return (
       <div >
@@ -32,7 +36,9 @@ class NewsItem extends React.Component {
           <Row type="flex" justify="center" >
             <Col span={24} lg={16}>
               <Card
-                style={{ margin: 0, borderRight: "1px solid #e8e8e8" }}
+                style={this.context.device==="mobile"
+                ?{ margin: 0, borderRight: "0px solid #e8e8e8" }
+                :{ margin: 0, borderRight: "1px solid #e8e8e8" }}
                 bodyStyle={{ padding: 12, paddingTop: 0 }}
                 bordered={false}
               >
@@ -47,14 +53,11 @@ class NewsItem extends React.Component {
               >
                 <Tag color="#108ee9">{newsInfo.category.category_name}</Tag>
                 <Tag color="#108ee9">{newsInfo.category.sub_category_name}</Tag>
-                <br />
-                <br />
-                {newsInfo.source && <Tag color="#108ee9">{`Source:${newsInfo.source}`}</Tag>}
-                {newsInfo.stock && <Tag color="#108ee9">{`股票代码:${newsInfo.stock}`}</Tag>}
+                {newsInfo.stock && <Tag >{`股票代码:${newsInfo.stock}`}</Tag>}
                 <br />
                 <br />
                 <Typography.Paragraph>
-                  <ul style={{ fontSize: "14px" }}>
+                  <ul style={{fontSize:fontSize}}>
                     {
                       newsInfo.relate.map(item =>
                         <div>
@@ -76,12 +79,14 @@ class NewsItem extends React.Component {
           </Row>
         </Card>
         <Row>
-          <Col span={24} lg={12}>
+          <Col span={12} >
             <div style={{ textAlign: "left", marginLeft: 12 }}>
-              {newsInfo.source &&<span style={{fontWeight:"bold", fontStyle:"italic"}}>{`Source:${newsInfo.source}`}</span>}
+              {newsInfo.source && 
+                <span style={{fontSize:fontSize, fontWeight: "bold", fontStyle: "italic" }}>{`Source:${newsInfo.source}`}
+                </span>}
             </div>
           </Col>
-          <Col span={24} lg={12}>
+          <Col span={12} >
             <div style={{ textAlign: "right" }} >
               <span style={{ marginRight: 24 }}>
                 <NewsLike
@@ -101,14 +106,18 @@ class NewsItem extends React.Component {
 
         </Row>
         {this.state.commentVisible
-          ? <Card style={{ margin: 20, marginTop: 0, padding: 0 }} bordered={false} >
+          ? <Card 
+              style={{ margin: 12, marginTop: 0, padding: 0 }} 
+              bordered={false} 
+              bodyStyle={{padding:0 }}
+              >
             <NewsTreeComment
               data={{ comment: newsInfo.comment, user: this.props.data.user, newsId: newsInfo.id }}
               method={{ onNewsCommentClick: this.props.method.onNewsCommentClick }}
             />
           </Card>
           : null}
-        <hr />
+        <hr style={{border:"none",borderTop:"2px #e8e8e8 solid"}}/>
       </div>
     )
   }

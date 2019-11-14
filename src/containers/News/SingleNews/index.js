@@ -7,7 +7,7 @@ class SingleNewsContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading : true,
+      loading: true,
       newsInfo: {},
       other: 'other',
       user: { id: 6074 }
@@ -15,18 +15,17 @@ class SingleNewsContainer extends React.Component {
   }
 
   handleRetrieveNews = (data) => {
-    console.log(data)
-    this.setState({ newsInfo: [] })
     const newsInfo = {
       id: data['id'],
       time: data['create_date'],
       content: data['content'],
       title: data['title'],
-      /*fimgSrc : "http://vmp.hzinsights.com/element/138/10y_treasury/2019-09-12,2019-09-13|||||/",*/
       like: data['like'],
       comment: data.comment,
-      avatar: 'https://i.loli.net/2019/10/24/mMZX3ic1RqHnzsj.png',
-      category: data['category']
+      category: data['category'],
+      relate: data['relate'],
+      stock: data['stock'],
+      source: data['source']
     }
     this.setState({ newsInfo: newsInfo, loading: false })
   }
@@ -76,17 +75,17 @@ class SingleNewsContainer extends React.Component {
 
     return (
       <Skeleton active loading={this.state.loading}>
-      <SingleNews
-        data={{
-          user: this.state.user,
-          newsInfo: this.state.newsInfo,
-        }}
-        method={{
-          onNewsLikeClick: this.onNewsLikeClick,
-          onNewsCommentClick: this.onNewsCommentClick,
-        }}
+        <SingleNews
+          data={{
+            user: this.state.user,
+            newsInfo: this.state.newsInfo,
+          }}
+          method={{
+            onNewsLikeClick: this.onNewsLikeClick,
+            onNewsCommentClick: this.onNewsCommentClick,
+          }}
 
-      /></Skeleton>
+        /></Skeleton>
 
     )
   }

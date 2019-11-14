@@ -3,11 +3,12 @@ import NewsTreeComment from '../NewsComment'
 import NewsLike from '../NewsLike'
 import Category from '../Category'
 import { Link } from 'react-router-dom'
+import { ScreenContext } from '../../../utils/Screen'
 //import NewsImg from './NewsImg'
 import { Input, PageHeader, Icon, Card, Row, Col, message, Typography, Tag, Tooltip } from 'antd'
 
 class SingleNews extends React.Component {
-
+  static contextType = ScreenContext
   state = { commentVisible: false }
   //onNewsLikeClick = () => {this.props.method.onNewsLikeClick(this.props.data.newsInfo.like)} 
   //onNewsCommentClick = (params) => this.props.method.onNewsCommentClick(params,this.props.data.newsInfo.id)
@@ -17,6 +18,7 @@ class SingleNews extends React.Component {
   }
 
   render() {
+    const fontSize = this.context.device==="mobile"?"12px":"14px"
     const newsInfo = this.props.data.newsInfo
     return (
       <div >
@@ -29,18 +31,9 @@ class SingleNews extends React.Component {
           }}
           title={<Link style={{color: 'rgba(0, 0, 0, 0.85)'}} to={`/news`}>新闻信息流</Link>}
           subTitle="Power by VMP@HZ"
-          extra={[
-            <Category></Category>,
-            <Input.Search
-              style={{ width: 200 }}
-              placeholder="搜索标题/内容/作者..."
-              allowClear
-            />
-          ]}
         >
         </PageHeader>
         <Card
-
           bordered={false}
           bodyStyle={{ padding: 0 }}
           headStyle={{ paddingLeft: 12 }}
@@ -52,7 +45,9 @@ class SingleNews extends React.Component {
           <Row type="flex" justify="center" >
             <Col span={24} lg={16}>
               <Card
-                style={{ margin: 0, borderRight: "1px solid #e8e8e8" }}
+                style={this.context.device==="mobile"
+                ?{ margin: 0, borderRight: "0px solid #e8e8e8" }
+                :{ margin: 0, borderRight: "1px solid #e8e8e8" }}
                 bodyStyle={{ padding: 12, paddingTop: 0 }}
                 bordered={false}
               >
@@ -67,22 +62,59 @@ class SingleNews extends React.Component {
               >
                 <Tag color="#108ee9">{newsInfo.category.category_name}</Tag>
                 <Tag color="#108ee9">{newsInfo.category.sub_category_name}</Tag>
+                {newsInfo.stock && <Tag >{`股票代码:${newsInfo.stock}`}</Tag>}
                 <br />
                 <br />
                 <Typography.Paragraph>
-                  <ul style={{ fontSize: "14px" }}>
-                    <a target="_blank" rel="noopener noreferrer" href="http://vmp.hzinsights.com/article/1318/consumer_discretionary_report_monthly">【弘则策略】可选消费月报(2019年10月)</a>
-                    <br />
-                    <a target="_blank" rel="noopener noreferrer" href="http://vmp.hzinsights.com/article/1317/capital_goods_report_monthly">【弘则策略】投资品月报(2019年10月)</a>
-                    <br />
-                    <a target="_blank" rel="noopener noreferrer" href="http://vmp.hzinsights.com/article/1321/market_flow_tracking_report">【弘则策略】市场资金流跟踪(191030)</a>
+                <ul style={{fontSize:fontSize}}>
+                    {
+                      newsInfo.relate.map(item =>
+                        <div>
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            key={item.id}
+                            href={`http://vmp.hzinsights.com/article/${item.relate_article_id}/`}
+                          >
+                            {`【弘则策略】${item.relate_article_title}【${item.relate_article_publish_date.slice(0, item.relate_article_publish_date.indexOf('T'))}】`}
+                          </a>
+                          <br />
+                        </div>
+                      )}
                   </ul>
                 </Typography.Paragraph>
               </Card>
             </Col>
           </Row>
         </Card>
+        <Row>
+          <Col span={12} >
+            <div style={{ textAlign: "left", marginLeft: 12 }}>
+              {newsInfo.source && 
+                <span style={{fontSize:fontSize, fontWeight: "bold", fontStyle: "italic" }}>{`Source:${newsInfo.source}`}
+                </span>}
+            </div>
+          </Col>
+          <Col span={12} >
+            <div style={{ textAlign: "right" }} >
+              <span style={{ marginRight: 24 }}>
+                <NewsLike
+                  data={{ like: newsInfo.like, user: this.props.data.user, newsId: newsInfo.id }}
+                  method={{ onNewsLikeClick: this.props.method.onNewsLikeClick }}
+                />
+              </span>
+              <span style={{ marginRight: 24 }} onClick={this.onIconClick}>
+                <Tooltip title="评论">
+                  <Icon type="message" key="comment" style={{ marginRight: 8 }} />
+                  {`${newsInfo.comment.length - 1}`}</Tooltip>
+              </span>
+              <span style={{ marginRight: 24 }}>
+                <Tooltip title="分享"><Icon type="share-alt" key="share" onClick={() => message.success('分享成功')} /></Tooltip>
+              </span>
+            </div></Col>
 
+        </Row>
+{/* 
         <div style={{ textAlign: "right" }} >
           <span style={{ marginRight: 24 }}>
             <NewsLike
@@ -98,7 +130,7 @@ class SingleNews extends React.Component {
           <span style={{ marginRight: 24 }}>
             <Tooltip title="分享"><Icon type="share-alt" key="share" onClick={() => message.success('分享成功')} /></Tooltip>
           </span>
-        </div>
+        </div> */}
         {this.state.commentVisible
           ? <Card style={{ margin: 20, marginTop: 0, padding: 0 }} bordered={false} >
             <NewsTreeComment
@@ -107,7 +139,7 @@ class SingleNews extends React.Component {
             />
           </Card>
           : null}
-        <hr />
+        <hr style={{border:"none",borderTop:"2px #e8e8e8 solid"}}/>
       </div>
     )
   }
