@@ -203,13 +203,24 @@ export const editorApi = {
       console.log(err)
     }
   },
+  deleteRelatedArticles : async (data,callback) => {
+    try {
+      let rst = await pkgAxios({
+        url : `news/${data.news_id}/related_articles/${data.id}/`,
+        method : 'DELETE',
+        data : data
+      })
+      console.log(rst)
+      callback(rst.data)
+    } catch(err) {
+      console.log(err)
+    }
+  },
   postNews : async (data,callback) => {
-
     const wrappedData = {...data}
     wrappedData.content = data.content.model
     wrappedData.relatedNews = data.relatedNews===undefined?[]:data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
     wrappedData.request_category = data.request_category[1]
-    console.log(data,wrappedData)
     try {
       let rst = await pkgAxios({
         url : 'news/',
@@ -221,7 +232,25 @@ export const editorApi = {
     } catch(err) {
       console.log(err)
     }
-  }
+  },
+  putNews : async (data,callback) => {
+    const wrappedData = {...data}
+    wrappedData.content = data.content.model
+    wrappedData.relatedNews = data.relatedNews===undefined?[]:data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
+    wrappedData.request_category = data.request_category[1]
+    try {
+      let rst = await pkgAxios({
+        url : `news/${data.newsId}`,
+        method : 'PUT',
+        data : wrappedData
+      })
+      console.log(rst)
+      callback(rst.data, wrappedData)
+    } catch(err) {
+      console.log(err)
+    }
+  },
+
 }
 
 export const checkApi = {

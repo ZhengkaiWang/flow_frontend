@@ -14,12 +14,12 @@ class EditorContainer extends React.Component {
       imageLoading: true,
       imagePage: 1,
       imagePageCount: 1,
-      imageSearchKeywords: ''
+      imageSearchKeywords: '',
+      pvsRelate: ''
     }
   }
 
   componentDidMount() {
-    console.log(this.props.match.params.id)
     this.listAuthors()
     this.listImages()
     this.listCategorys()
@@ -27,17 +27,17 @@ class EditorContainer extends React.Component {
 
   listImages = data => {
     editorApi.listImages(data,
-    rspData => {
-      let rspImageList = []
-      rspData.results.forEach(element => {
-        rspImageList = rspImageList.concat(element)
+      rspData => {
+        let rspImageList = []
+        rspData.results.forEach(element => {
+          rspImageList = rspImageList.concat(element)
+        })
+        this.setState({
+          imageList: rspImageList,
+          imageLoading: false,
+          imagePageCount: rspData.count
+        })
       })
-      this.setState({
-        imageList: rspImageList,
-        imageLoading: false,
-        imagePageCount: rspData.count
-      })
-    })
   }
 
   listAuthors = data => {
@@ -60,28 +60,56 @@ class EditorContainer extends React.Component {
   }
 
   handleEditorSubmit = data =>
-    editorApi.postNews(data,
-      (rspData, wrappedData) => {
-        wrappedData.relatedNews.map(item =>
-          editorApi.postRelatedArticles({
-            article__id: item,
-            news_id: rspData.id,
-            status: 1
-          }, () => { console.log(`${item}创建成功`) }
+    this.props.match.params.id === undefined
+      ? editorApi.postNews(data,
+        (rspData, wrappedData) => {
+          wrappedData.relatedNews.map(item =>
+            editorApi.postRelatedArticles({
+              article__id: item,
+              news_id: rspData.id,
+              status: 1
+            }, () => { console.log(`${item}创建成功`) }
+            )
           )
-        )
-        message.info(`【${rspData.title}】新建成功，请通知审核`)
-      }
-    )
+          message.info(`【${rspData.title}】新建成功，请通知审核`)
+        }
+      )
+      : editorApi.putNews({ ...data, newsId: this.props.match.params.id },
+        (rspData, wrappedData) => {
+          this.state.pvsRelate.map(item =>
+            editorApi.deleteRelatedArticles({
+              news_id: item.news_id,
+              id: item.id
+            }, rspData => { 
+              this.setState({pvsRelate:[]})
+              console.log(`${item.relate_article_id}删除成功`) })
+          )
+          wrappedData.relatedNews.map(item =>
+            editorApi.postRelatedArticles({
+              article__id: item,
+              news_id: rspData.id,
+              status: 1
+            }, rspData => { 
+              this.setState({pvsRelate:this.state.pvsRelate.concat(rspData)})
+              console.log(`${item}创建成功`) }
+            )
+          )
+          message.info(`【${rspData.title}】修改成功，请通知审核`)
+        }
+
+      )
+
+  handlePvsRelate = pvsRelate =>
+    this.setState({ pvsRelate: pvsRelate })
 
   handleImagePage = page => {
-    this.setState({imageLoading: true, imagePage:page})
-    this.listImages({page: page})
+    this.setState({ imageLoading: true, imagePage: page })
+    this.listImages({ page: page })
   }
 
   handleImageSearch = value => {
-    this.setState({imageLoading: true, imageSearchKeywords: value })
-    this.listImages({search_keywords: value})
+    this.setState({ imageLoading: true, imageSearchKeywords: value })
+    this.listImages({ search_keywords: value })
   }
 
   render() {
@@ -93,14 +121,15 @@ class EditorContainer extends React.Component {
           categoryList: this.state.categoryList,
           imageList: this.state.imageList,
           imageLoading: this.state.imageLoading,
-          id: this.props.match.params.id,
+          newsId: this.props.match.params.id,
           imagePage: this.state.imagePage,
           imagePageCount: this.state.imagePageCount
         }}
         method={{
           handleEditorSubmit: this.handleEditorSubmit,
           handleImageSearch: this.handleImageSearch,
-          handleImagePage: this.handleImagePage
+          handleImagePage: this.handleImagePage,
+          handlePvsRelate: this.handlePvsRelate
         }}
       />
     )

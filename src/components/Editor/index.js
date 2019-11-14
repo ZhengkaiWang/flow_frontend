@@ -2,6 +2,7 @@ import React from 'react'
 import urlSlug from 'url-slug'
 import { Cascader, Form, Input, Button, Select, Row, Col, Card, Typography, Tag, Tabs, PageHeader } from 'antd'
 import EditorText from './EditorText'
+import { newsApi } from '../../utils/api'
 import Category from '../News/Category'
 import EditorImage from './EditorImage'
 import EditorRelatedNews from './EditorRelatedNews'
@@ -11,8 +12,29 @@ import generateArticleTitle from '../../utils/generateArticleTitle'
 class Editor extends React.Component {
 
   componentDidMount() {
-    //this.props.form.validateFields()
+    this.props.data.newsId === undefined
+      ? console.log(this.props.data.newsId)
+      : this.RetriveNews(this.props.data.newsId)
   }
+
+  RetriveNews = newsId =>
+    newsApi.retrieveNews(rspData => {
+      this.props.method.handlePvsRelate(rspData.relate)
+      this.props.form.setFieldsValue({
+        content: { model: rspData.content },
+        title: rspData.title,
+        request_principal: String(rspData.principal_id),
+        request_category: [rspData.category.category_name, String(rspData.category.id)],
+        source: rspData.source,
+        stock: rspData.stock,
+        relatedNews: {
+          checkedList: rspData.relate.map(item =>
+            `${item.relate_article_id}@${item.relate_article_title}#${item.relate_article_publish_date}&${item.article__update_frequency}^${item.article__show_category_in_title}`
+          )
+        }
+      })
+    },{id: newsId})
+
 
   handleImageClick = item =>
     this.froalaInstance.html.insert(
@@ -42,7 +64,6 @@ class Editor extends React.Component {
 
   render() {
     const formValue = this.props.form.getFieldsValue()
-
     return (
 
       <Form
@@ -109,10 +130,10 @@ class Editor extends React.Component {
                                 rel="noopener noreferrer"
                                 href={`http://vmp.hzinsights.com/article/${item.slice(0, item.indexOf('@'))}/`}
                               >{generateArticleTitle({
-                                title:item.slice(item.indexOf('@')+1,item.indexOf('#')),
-                                publish_date:item.slice(item.indexOf('#')+1,item.indexOf('&')),
-                                update_frequency:item.slice(item.indexOf('&')+1,item.indexOf('^')),
-                                show_category_in_title:item.slice(item.indexOf('^')+1)
+                                title: item.slice(item.indexOf('@') + 1, item.indexOf('#')),
+                                publish_date: item.slice(item.indexOf('#') + 1, item.indexOf('&')),
+                                update_frequency: item.slice(item.indexOf('&') + 1, item.indexOf('^')),
+                                show_category_in_title: item.slice(item.indexOf('^') + 1)
                               }
                               )}
                               </a>
