@@ -10,13 +10,13 @@ class Flow extends React.Component {
 
   state = {
     id:1,
-    name: ""
+    name: "超级管理员"
   }
 
   componentDidMount() {
     loginApi.login({},rspData=> {
       const id=rspData.id==='unlogin'?1:Number(rspData.id)
-      const name=rspData.name==='unlogin'?"游客":String(rspData.name)
+      const name=rspData.name===''?'超级管理员':String(rspData.name)
       this.setState({id: id, name: name})
     })
   }
