@@ -1,12 +1,13 @@
 import React from 'react'
 import urlSlug from 'url-slug'
-import { Cascader, Form, Input, Button, Select, Row, Col, Card, Typography, Tag, Tabs, PageHeader } from 'antd'
+import { Tooltip, Icon, Cascader, Form, Input, Button, Select, Row, Col, Card, Typography, Tag, Tabs} from 'antd'
 import EditorText from './EditorText'
 import { newsApi } from '../../utils/api'
 import Category from '../News/Category'
 import EditorImage from './EditorImage'
 import EditorRelatedNews from './EditorRelatedNews'
 import categoryStatic from './CategoryStatic'
+import ContentHeader from '../Common/ContentHeader'
 import generateArticleTitle from '../../utils/generateArticleTitle'
 
 class Editor extends React.Component {
@@ -33,7 +34,7 @@ class Editor extends React.Component {
           )
         }
       })
-    },{id: newsId})
+    }, { id: newsId })
 
 
   handleImageClick = item =>
@@ -71,24 +72,13 @@ class Editor extends React.Component {
         layout="horizontal"
         style={{ padding: 0, margin: 0 }}
       >
-        <PageHeader
-          style={{
-            marginBottom: 12,
-            padding: 0,
-            paddingBottom: 18,
-            borderBottom: '1px solid rgb(235, 237, 240)',
-          }}
-          title="编辑新闻"
-          subTitle="Power by VMP@HZ"
-          extra={[]}
-        >
-        </PageHeader>
+        <ContentHeader data={{ title: "编辑新闻", lind: "/editor/" }} />
         <Row>
           <Col span={24} lg={16}><div style={{ padding: 12 }}>
-            <div style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>新闻预览</div>
+            <div style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12}}>新闻预览</div>
             <Card
               bordered={true}
-              bodyStyle={{ padding: 0 }}
+              bodyStyle={{ padding: 0, paddingBottom: 12 }}
               headStyle={{ paddingLeft: 12 }}
               style={{ margin: 0, marginTop: 0, marginBottom: 24 }}
               hoverable={true}
@@ -113,10 +103,7 @@ class Editor extends React.Component {
                   >
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category[1]].category_name}</Tag>}
                     {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category[1]].sub_category_name}</Tag>}
-                    <br />
-                    <br />
-                    {formValue.source && <Tag color="#108ee9">{`Source:${formValue.source}`}</Tag>}
-                    {formValue.stock && <Tag color="#108ee9">{`股票代码:${formValue.stock}`}</Tag>}
+                    {formValue.stock && <Tag >{`股票代码:${formValue.stock}`}</Tag>}
                     <br />
                     <br />
                     <Typography.Paragraph>
@@ -146,7 +133,35 @@ class Editor extends React.Component {
                   </Card>
                 </Col>
               </Row>
-            </Card>
+            
+            <Row>
+              <Col span={12} >
+                <div style={{ textAlign: "left", marginLeft: 12 }}>
+                  {formValue.source &&
+                    <span style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic" }}>{`Source:${formValue.source}`}
+                    </span>}
+                </div>
+              </Col>
+              <Col span={12} >
+                <div style={{ textAlign: "right" }} >
+                  <span style={{ marginRight: 24, cursor: "pointer" }}>
+                    <Tooltip title="点赞">
+                      <Icon
+                        type={'like'}
+                        theme={'outlined'}
+                        style={{ marginRight: 8, fontSize: '16px' }}
+                      />0</Tooltip>
+                  </span>
+                  <span style={{ marginRight: 24, cursor: "pointer" }} onClick={this.onIconClick}>
+                    <Tooltip title="评论">
+                      <Icon type="message" key="comment" style={{ marginRight: 8 }} />
+                      0</Tooltip>
+                  </span>
+                  <span style={{ marginRight: 24 }}>
+                    <Tooltip title="分享"><Icon type="share-alt" key="share"/></Tooltip>
+                  </span>
+                </div></Col>
+            </Row></Card>
             <div style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>正文编辑</div>
             <Form.Item >
               {this.props.form.getFieldDecorator('content', {

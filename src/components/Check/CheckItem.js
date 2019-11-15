@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import { Card, Popconfirm, message, Button} from 'antd'
+import { Card, Popconfirm, message, Button } from 'antd'
 
 class CheckItem extends React.Component {
 
@@ -48,34 +48,32 @@ class CheckItem extends React.Component {
 
     return (
 
-        <Card
-          bordered={true}
-          bodyStyle={{ padding: 36 }}
-          style={{ margin: 20, marginBottom: 0 }}
-          hoverable
-          size="small"
-          title={`${newsInfo.title}   ${newsInfo.time.slice(newsInfo.time.indexOf('-') + 1, newsInfo.time.indexOf('T'))}  ${newsInfo.time.substr(newsInfo.time.indexOf('T') + 1, 8)}`}
-          actions={[
-            publish,
-            <Link to={`/editor/${newsInfo.id}/`}><Button>编辑</Button></Link>
-            ,
-            <Popconfirm
-              title="确认删除此条新闻？"
-              onConfirm={this.handleDelete}
-              onCancel={undefined}
-              okText="是"
-              cancelText="否"
-            >
-              <Button>删除</Button>
-            </Popconfirm>
-          ]}
-        >
+      <Card
+        bordered={true}
+        bodyStyle={{ padding: 12 }}
+        style={{ margin: 0, marginTop: 12 }}
+        hoverable
+        size="small"
+        title={`${newsInfo.title}   ${newsInfo.time.slice(newsInfo.time.indexOf('-') + 1, newsInfo.time.indexOf('T'))}  ${newsInfo.time.substr(newsInfo.time.indexOf('T') + 1, 8)}`}
+        actions={[
+          publish,
+          <Link to={`/editor/${newsInfo.id}/`}><Button>编辑</Button></Link>
+          ,
+          <Popconfirm
+            title="确认删除此条新闻？"
+            onConfirm={this.handleDelete}
+            onCancel={undefined}
+            okText="是"
+            cancelText="否"
+          >
+            <Button>删除</Button>
+          </Popconfirm>
+        ]}
+      >
+          <div dangerouslySetInnerHTML={{ __html: newsInfo.content }}></div>
 
-              <Card style={{ marginLeft: 36, marginBottom: 10 }} bordered={false}>
-                <div dangerouslySetInnerHTML={{ __html: newsInfo.content }}></div>
-              </Card>
 
-        </Card>
+      </Card>
 
     )
   }

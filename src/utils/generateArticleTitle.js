@@ -3,7 +3,7 @@ import moment from 'moment'
 const generateArticleTitle = article => {
   const momentDate = moment(article.publish_date.slice(0, article.publish_date.indexOf('T')))
    const category = article.show_category_in_title===1
-    ?`分类:`
+    ?`默认分类:`
     :``
   const date = article.update_frequency==='daily'
     ?`(${article.publish_date.slice(2, 4)}${article.publish_date.slice(5, 7)}${article.publish_date.slice(8, 10)})`

@@ -1,9 +1,14 @@
 import React from 'react';
-import SingleNews from '../../../components/News/SingleNews'
+import ContentHeader from '../../../components/Common/ContentHeader'
 import { newsApi } from '../../../utils/api'
 import { message, Skeleton } from 'antd'
+import NewsItem from '../../../components/News/NewsItem';
+import { UserContext } from '../../../utils/User'
 
 class SingleNewsContainer extends React.Component {
+
+  static contextType = UserContext
+
   constructor(props) {
     super(props)
     this.state = {
@@ -54,7 +59,7 @@ class SingleNewsContainer extends React.Component {
         this.setState({ newsInfoList: tmpState })
       },
         {
-          like_user_id: this.state.user.id,
+          like_user_id: this.context.userID,
           like_news_id: params,
           status: 1
         })
@@ -74,19 +79,22 @@ class SingleNewsContainer extends React.Component {
   render() {
 
     return (
-      <Skeleton active loading={this.state.loading}>
-        <SingleNews
-          data={{
-            user: this.state.user,
-            newsInfo: this.state.newsInfo,
-          }}
-          method={{
-            onNewsLikeClick: this.onNewsLikeClick,
-            onNewsCommentClick: this.onNewsCommentClick,
-          }}
+      <div>
+        <ContentHeader data={{ link: '/news/', title: '新闻信息流' }} />
+        <Skeleton active loading={this.state.loading}>
+          <NewsItem
+            data={{
+              user: this.context.userID,
+              newsInfo: this.state.newsInfo,
+            }}
+            method={{
+              onNewsLikeClick: this.onNewsLikeClick,
+              onNewsCommentClick: this.onNewsCommentClick,
+            }}
 
-        /></Skeleton>
-
+          />
+        </Skeleton>
+      </div>
     )
   }
 }

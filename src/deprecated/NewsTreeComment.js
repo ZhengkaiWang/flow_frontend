@@ -1,6 +1,6 @@
 import React from 'react'
 import WrappedNewsTreeCommentForm from './NewsTreeCommentForm'
-import {UserContext} from '../../utils/User'
+import { UserContext } from '../../utils/User'
 import { Tree, Icon } from 'antd';
 
 const { TreeNode } = Tree;
@@ -46,7 +46,7 @@ class NewsTreeComment extends React.Component{
   onNewsCommentClick = value => {
     const data = {
       ...value,
-      comment_user_id : this.context.id,
+      comment_user_id : this.context.userID,
       comment_news_id : this.props.data.newsId,
       parent_id : this.state.commentKey
     }

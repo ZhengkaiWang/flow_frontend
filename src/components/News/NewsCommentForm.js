@@ -5,7 +5,7 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class NewsTreeCommentForm extends React.Component {
+class NewsCommentForm extends React.Component {
   
   componentDidMount() {
     // To disabled submit button at the beginning.
@@ -52,6 +52,6 @@ class NewsTreeCommentForm extends React.Component {
   }
 }
 
-const WrappedNewsTreeCommentForm = Form.create({ name: 'horizontal_login' })(NewsTreeCommentForm);
-export default WrappedNewsTreeCommentForm
+const WrappedNewsCommentForm = Form.create({ name: 'horizontal_login' })(NewsCommentForm);
+export default WrappedNewsCommentForm
  

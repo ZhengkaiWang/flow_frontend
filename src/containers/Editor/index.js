@@ -2,6 +2,7 @@ import React from 'react'
 import { editorApi } from '../../utils/api'
 import Editor from '../../components/Editor'
 import { message } from 'antd'
+import {withRouter} from "react-router-dom";
 
 
 class EditorContainer extends React.Component {
@@ -72,6 +73,7 @@ class EditorContainer extends React.Component {
             )
           )
           message.info(`【${rspData.title}】新建成功，请通知审核`)
+          this.props.history.push("/check")
         }
       )
       : editorApi.putNews({ ...data, newsId: this.props.match.params.id },
@@ -95,8 +97,8 @@ class EditorContainer extends React.Component {
             )
           )
           message.info(`【${rspData.title}】修改成功，请通知审核`)
+          this.props.history.push("/check")
         }
-
       )
 
   handlePvsRelate = pvsRelate =>
@@ -136,6 +138,6 @@ class EditorContainer extends React.Component {
   }
 }
 
-export default EditorContainer
+export default withRouter(EditorContainer)
 
 

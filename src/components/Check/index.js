@@ -1,6 +1,7 @@
 import React from 'react'
 import CheckItem from './CheckItem'
-import { Switch } from 'antd';
+import { Switch, Row, Col } from 'antd';
+import ContentHeader from '../Common/ContentHeader'
 
 class Check extends React.Component {
 
@@ -12,34 +13,43 @@ class Check extends React.Component {
     const newsCheckList = this.props.data.newsCheckList
     return (
       <div>
-        <h5 align='center'>News Check</h5>
-        <Switch 
-          checkedChildren="全部" 
-          unCheckedChildren="待审核" 
-          defaultChecked 
-          onChange = {this.handleViewSwitch}
+        <ContentHeader
+          data={{title:"审核新闻",Link:"/check"}}
+          components={{
+            extra: [
+              <Switch
+                checkedChildren="全部"
+                unCheckedChildren="待审核"
+                defaultChecked
+                onChange={this.handleViewSwitch}
+              />
+            ]
+          }}
         />
+        <Row gutter={16}>
         {newsCheckList.map(
           (item, index) => {
-            const checkItemInstance = 
-              <CheckItem 
-                key = {item.id}
-                data = {{
-                  newsInfo : item
+            const checkItemInstance =
+            <Col span={12}>
+              <CheckItem
+                key={item.id}
+                data={{
+                  newsInfo: item
                 }}
-                method = {{
-                  handleCheck : this.props.method.handleCheck,
-                  handleCancelCheck : this.props.method.handleCancelCheck,
-                  handleDelete : this.props.method.handleDelete
+                method={{
+                  handleCheck: this.props.method.handleCheck,
+                  handleCancelCheck: this.props.method.handleCancelCheck,
+                  handleDelete: this.props.method.handleDelete
                 }}
               >
-              </CheckItem>
-            return this.props.data.viewSwitch ? 
+              </CheckItem></Col>
+            return this.props.data.viewSwitch ?
               (checkItemInstance) :
-              (item.publish_status?checkItemInstance:undefined)
+              (item.publish_status ? checkItemInstance : undefined)
           }
         )}
-        <hr/>
+        </Row>
+        <hr />
       </div>
     )
   }

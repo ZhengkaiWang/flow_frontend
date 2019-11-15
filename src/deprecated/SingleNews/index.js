@@ -1,11 +1,10 @@
 import React from 'react'
 import NewsTreeComment from '../NewsComment'
 import NewsLike from '../NewsLike'
-import Category from '../Category'
 import { Link } from 'react-router-dom'
 import { ScreenContext } from '../../../utils/Screen'
 //import NewsImg from './NewsImg'
-import { Input, PageHeader, Icon, Card, Row, Col, message, Typography, Tag, Tooltip } from 'antd'
+import {PageHeader, Icon, Card, Row, Col, message, Typography, Tag, Tooltip } from 'antd'
 
 class SingleNews extends React.Component {
   static contextType = ScreenContext
@@ -114,23 +113,7 @@ class SingleNews extends React.Component {
             </div></Col>
 
         </Row>
-{/* 
-        <div style={{ textAlign: "right" }} >
-          <span style={{ marginRight: 24 }}>
-            <NewsLike
-              data={{ like: newsInfo.like, user: this.props.data.user, newsId: newsInfo.id }}
-              method={{ onNewsLikeClick: this.props.method.onNewsLikeClick }}
-            />
-          </span>
-          <span style={{ marginRight: 24 }} onClick={this.onIconClick}>
-            <Tooltip title="评论">
-              <Icon type="message" key="comment" style={{ marginRight: 8 }} />
-              {`${newsInfo.comment.length - 1}`}</Tooltip>
-          </span>
-          <span style={{ marginRight: 24 }}>
-            <Tooltip title="分享"><Icon type="share-alt" key="share" onClick={() => message.success('分享成功')} /></Tooltip>
-          </span>
-        </div> */}
+
         {this.state.commentVisible
           ? <Card style={{ margin: 20, marginTop: 0, padding: 0 }} bordered={false} >
             <NewsTreeComment

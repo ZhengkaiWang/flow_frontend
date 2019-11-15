@@ -8,6 +8,22 @@ function setCookie(name,value) {
 }
 */
 
+export const loginApi = {
+  login: async (params, callback) => {
+    try {
+      let rst = await pkgAxios({
+        url : 'users/',
+        method : 'GET',
+        params : params
+      })
+      console.log(rst)
+      callback(rst.data)
+    } catch(err) {
+      console.log(err)
+    }
+  },
+}
+
 export const newsApi = {
 /*
   listComment : async (callback, params) => {

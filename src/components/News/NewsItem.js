@@ -1,6 +1,7 @@
 import React from 'react'
 import NewsTreeComment from './NewsComment'
 import NewsLike from './NewsLike'
+import generateArticleTitle from '../../utils/generateArticleTitle'
 //import NewsImg from './NewsImg'
 import { ScreenContext } from '../../utils/Screen'
 import { Link } from 'react-router-dom'
@@ -24,7 +25,6 @@ class NewsItem extends React.Component {
     return (
       <div >
         <Card
-
           bordered={false}
           bodyStyle={{ padding: 0 }}
           headStyle={{ paddingLeft: 12 }}
@@ -51,8 +51,8 @@ class NewsItem extends React.Component {
                 bodyStyle={{ padding: 0, paddingLeft: 12 }}
                 bordered={false}
               >
-                <Tag color="#108ee9">{newsInfo.category.category_name}</Tag>
-                <Tag color="#108ee9">{newsInfo.category.sub_category_name}</Tag>
+                <Tag color="#108ee9" style={{marginBottom:8}}>{newsInfo.category.category_name}</Tag>
+                <Tag color="#108ee9" style={{marginBottom:8}}>{newsInfo.category.sub_category_name}</Tag>
                 {newsInfo.stock && <Tag >{`股票代码:${newsInfo.stock}`}</Tag>}
                 <br />
                 <br />
@@ -67,7 +67,12 @@ class NewsItem extends React.Component {
                             key={item.id}
                             href={`http://vmp.hzinsights.com/article/${item.relate_article_id}/`}
                           >
-                            {`【弘则策略】${item.relate_article_title}【${item.relate_article_publish_date.slice(0, item.relate_article_publish_date.indexOf('T'))}】`}
+                            {generateArticleTitle({
+                              publish_date: item.relate_article_publish_date,
+                              show_category_in_title: item.article__show_category_in_title,
+                              update_frequency: item.article__update_frequency,
+                              title: item.relate_article_title
+                            })}
                           </a>
                           <br />
                         </div>
@@ -88,13 +93,13 @@ class NewsItem extends React.Component {
           </Col>
           <Col span={12} >
             <div style={{ textAlign: "right" }} >
-              <span style={{ marginRight: 24 }}>
+              <span style={{ marginRight: 24 , cursor:"pointer"}}>
                 <NewsLike
                   data={{ like: newsInfo.like, user: this.props.data.user, newsId: newsInfo.id }}
                   method={{ onNewsLikeClick: this.props.method.onNewsLikeClick }}
                 />
               </span>
-              <span style={{ marginRight: 24 }} onClick={this.onIconClick}>
+              <span style={{ marginRight:24, cursor:"pointer"}} onClick={this.onIconClick}>
                 <Tooltip title="评论">
                   <Icon type="message" key="comment" style={{ marginRight: 8 }} />
                   {`${newsInfo.comment.length - 1}`}</Tooltip>

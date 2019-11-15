@@ -1,5 +1,5 @@
 import React from 'react'
-import WrappedNewsTreeCommentForm from './NewsTreeCommentForm'
+import WrappedNewsCommentForm from './NewsCommentForm'
 import { UserContext } from '../../utils/User'
 import { Icon, Comment, Tooltip, Button, Row } from 'antd';
 import moment from 'moment'
@@ -60,11 +60,10 @@ class NewsTreeComment extends React.Component {
   onNewsCommentClick = value => {
     const data = {
       ...value,
-      comment_user_id: this.context.id,
+      comment_user_id: this.context.userID,
       comment_news_id: this.props.data.newsId,
       parent_id: this.state.commentKey
     }
-    console.log(data)
     this.setState({
       commentFlag: false,
       commentKey: '',
@@ -75,7 +74,7 @@ class NewsTreeComment extends React.Component {
 
   render() {
     const inputArea = this.state.commentFlag
-      ? <WrappedNewsTreeCommentForm
+      ? <WrappedNewsCommentForm
         data={{ reply: this.state.reply }}
         method={{ onNewsCommentClick: this.onNewsCommentClick }}
       />
