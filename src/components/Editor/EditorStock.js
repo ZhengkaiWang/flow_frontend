@@ -1,9 +1,8 @@
 import React from 'react'
 import { editorApi } from '../../utils/api'
-import generateArticleTitle from '../../utils/generateArticleTitle'
-import { Checkbox, Pagination, Input, Spin,Icon, Button, Row, Col } from 'antd'
+import {AutoComplete, Input} from 'antd'
 
-class EditorRelatedNews extends React.Component {
+class EditorStock extends React.Component {
   
   static getDerivedStateFromProps(nextProps, prevState) {
     // Should be a controlled component.
@@ -11,7 +10,7 @@ class EditorRelatedNews extends React.Component {
       return {
         ...({
           stockList:prevState.stockList,
-          ...(nextProps.value || {})
+          stock:nextProps.value||'',
         })
       }
     }
@@ -20,86 +19,40 @@ class EditorRelatedNews extends React.Component {
   
   constructor(props) {
     super(props)
-    const value = props.value || {}
     this.state = {
       relatedNewsList: [],
-      stock : value.stock || []
+      stock : props.value || ''
     }
   }
 
   triggerChange = changedValue => {
     // Should provide an event to pass value to Form.
     if (this.props.onChange) {
-      this.props.onChange({
-        ...{stock:this.state.stock},
-        ...changedValue,
-      })
+      this.props.onChange(changedValue)
     }
   }
 
   handleSearch = value => {
-    this.setState({articleLoading:true})
-    editorApi.listArticles(
-      rspData => 
-        this.setState({relatedNewsList:rspData, articleLoading:false, articlePageCount:rspData.count}),
-        {search_keywords:value})
-    }
-
-  onSelect = checkedList => {
-    this.setState({checkedList})
-    this.triggerChange({checkedList:checkedList})
-  }
-
-  handleCancel = () => {
-    this.setState({checkedList:[]})
-    this.triggerChange({checkedList:[]})
-  }
-    
-  render() {
-    return (
-      <div>
-      <Row  type="flex" gutter={28}>
-        <Col span={18}>
-        <Input.Search
-          placeholder="搜索标题/内容/作者..."
-          onSearch={this.handleSearch}
-        />
-        </Col> 
-        <Col span={6}>
-          <Button onClick={this.handleCancel}>清空</Button>
-        </Col></Row>
-        <Spin indicator={<Icon type="Loading" style={{ fontSize: 24 }} spin />} spinning={this.state.articleLoading}>
-        <Checkbox.Group 
-          style={{ marginTop: 12 }} 
-          onChange={this.handleCheck}
-          value={this.state.checkedList}
-          >
-          {this.state.relatedNewsList.results.map(item=>
-            <Checkbox 
-              style={{ marginLeft: 8, width:"100%" }} 
-              value={`${item.id}@${item.title}#${item.publish_date}&${item.update_frequency}^${item.show_category_in_title}`} 
-              key={item.id} >
-              {generateArticleTitle(item)}
-            </Checkbox>
-            )}
-          <Pagination 
-            style={{textAlign:"center", marginTop:12}} 
-            simple 
-            defaultCurrent={1} 
-            pageSize={20}
-            hideOnSinglePage={true}
-            total={this.state.articlePageCount} 
-            onChange={this.handleArticlePage}
-          />
-
-        </Checkbox.Group>
-        </Spin>
-        </div>
-      
-
+    editorApi.listStock({search_keywords:value},rspData =>
+      this.setState({
+        stockList:rspData.map(item=>{return {value:item.TRADE_CODE,text:`${item.SEC_NAME} ${item.TRADE_CODE}`}})
+      })
     )
   }
 
+    
+  render() {
+    return (
+      <AutoComplete 
+      placeholder='请输入股票代码'
+      onSelect={this.triggerChange}
+      dataSource={this.state.stockList}>
+      <Input.Search
+       onSearch={this.handleSearch}
+      />
+      </AutoComplete>   
+    )
+  }
 }
 
-export default EditorRelatedNews
+export default EditorStock

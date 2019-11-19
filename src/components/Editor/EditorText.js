@@ -16,7 +16,9 @@ class EditorText extends React.Component {
     // Should be a controlled component.
     if ('value' in nextProps) {
       return {
-        ...(nextProps.value || {}),
+        ...({
+          model:nextProps.value||'',
+        })
       }
     }
     return null
@@ -53,9 +55,8 @@ class EditorText extends React.Component {
 
   constructor(props) {
     super(props)
-    const value = props.value || {}
     this.state = {
-      model: value.model || '',
+      model: props.value || '',
     }
   }
 
@@ -63,15 +64,12 @@ class EditorText extends React.Component {
     // Should provide an event to pass value to Form.
     const { onChange } = this.props;
     if (onChange) {
-      onChange({
-        ...this.state,
-        ...changedValue,
-      })
+      onChange(changedValue)
     }
   }
 
-  handleModelChange = (model) =>
-    this.triggerChange({ model: model })
+  handleModelChange = model =>
+    this.triggerChange(model)
 
 
   render() {

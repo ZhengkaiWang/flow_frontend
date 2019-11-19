@@ -57,7 +57,6 @@ class EditorContainer extends React.Component {
         this.setState({ categoryList: this.state.categoryList.concat(element) })
       })
     })
-
   }
 
   handleEditorSubmit = data =>

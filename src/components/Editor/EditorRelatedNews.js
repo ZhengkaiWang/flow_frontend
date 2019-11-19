@@ -13,7 +13,7 @@ class EditorRelatedNews extends React.Component {
           relatedNewsList:prevState.relatedNewsList,
           articleLoading: prevState.articleLoading,
           articlePage: prevState.articlePage,
-          ...(nextProps.value || {})
+          checkedList:nextProps.value || []
         })
       }
     }
@@ -22,23 +22,19 @@ class EditorRelatedNews extends React.Component {
   
   constructor(props) {
     super(props)
-    const value = props.value || {}
     this.state = {
       relatedNewsList: {results:[]},
       articleLoading: true,
       articlePage: 1,
       articlePageCount: 1,
-      checkedList : value.checkedList || []
+      checkedList : props.value || []
     }
   }
 
   triggerChange = changedValue => {
     // Should provide an event to pass value to Form.
     if (this.props.onChange) {
-      this.props.onChange({
-        ...{checkedList:this.state.checkedList},
-        ...changedValue,
-      })
+      this.props.onChange(changedValue)
     }
   }
 
@@ -61,12 +57,12 @@ class EditorRelatedNews extends React.Component {
 
   handleCheck = checkedList => {
     this.setState({checkedList})
-    this.triggerChange({checkedList:checkedList})
+    this.triggerChange(checkedList)
   }
 
   handleCancel = () => {
     this.setState({checkedList:[]})
-    this.triggerChange({checkedList:[]})
+    this.triggerChange([])
   }
     
   render() {

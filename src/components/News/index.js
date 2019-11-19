@@ -1,6 +1,6 @@
 import React from 'react'
 import NewsItem from './NewsItem'
-import Category from './Category'
+import {CategoryCascade} from '../../utils/Category'
 import ContentHeader from '../Common/ContentHeader'
 import { Timeline, Icon, Input, Cascader } from 'antd'
 
@@ -15,7 +15,7 @@ class News extends React.Component {
             extra: [<Cascader
               changeOnSelect
               placeholder="请选择分类"
-              options={Category}
+              options={CategoryCascade}
               expandTrigger="hover"
               style={{ width: 140, marginBottom: 8, marginRight: 8 }}
               onChange={this.props.method.handleFilter}

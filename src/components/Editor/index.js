@@ -3,10 +3,10 @@ import urlSlug from 'url-slug'
 import { Tooltip, Icon, Cascader, Form, Input, Button, Select, Row, Col, Card, Typography, Tag, Tabs} from 'antd'
 import EditorText from './EditorText'
 import { newsApi } from '../../utils/api'
-import Category from '../News/Category'
+import { CategoryCascade, CategoryDict} from '../../utils/Category'
 import EditorImage from './EditorImage'
 import EditorRelatedNews from './EditorRelatedNews'
-import categoryStatic from './CategoryStatic'
+import EditorStock from './EditorStock'
 import ContentHeader from '../Common/ContentHeader'
 import generateArticleTitle from '../../utils/generateArticleTitle'
 
@@ -22,17 +22,16 @@ class Editor extends React.Component {
     newsApi.retrieveNews(rspData => {
       this.props.method.handlePvsRelate(rspData.relate)
       this.props.form.setFieldsValue({
-        content: { model: rspData.content },
+        content: rspData.content,
         title: rspData.title,
         request_principal: String(rspData.principal_id),
         request_category: [rspData.category.category_name, String(rspData.category.id)],
         source: rspData.source,
         stock: rspData.stock,
-        relatedNews: {
-          checkedList: rspData.relate.map(item =>
+        relatedNews: 
+          rspData.relate.map(item =>
             `${item.relate_article_id}@${item.relate_article_title}#${item.relate_article_publish_date}&${item.article__update_frequency}^${item.article__show_category_in_title}`
-          )
-        }
+          )     
       })
     }, { id: newsId })
 
@@ -92,7 +91,7 @@ class Editor extends React.Component {
                     bodyStyle={{ padding: 12, paddingTop: 0 }}
                     bordered={false}
                   >
-                    <div dangerouslySetInnerHTML={{ __html: (formValue.content || {}).model }}></div>
+                    <div dangerouslySetInnerHTML={{ __html: formValue.content }}></div>
                   </Card>
                 </Col>
                 <Col span={24} lg={24} >
@@ -101,15 +100,15 @@ class Editor extends React.Component {
                     bodyStyle={{ padding: 0, paddingLeft: 12 }}
                     bordered={false}
                   >
-                    {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category[1]].category_name}</Tag>}
-                    {formValue.request_category && <Tag color="#108ee9">{categoryStatic[formValue.request_category[1]].sub_category_name}</Tag>}
+                    {formValue.request_category && <Tag color="#108ee9">{CategoryDict[formValue.request_category[1]].category_name}</Tag>}
+                    {formValue.request_category && <Tag color="#108ee9">{CategoryDict[formValue.request_category[1]].sub_category_name}</Tag>}
                     {formValue.stock && <Tag >{`股票代码:${formValue.stock}`}</Tag>}
                     <br />
                     <br />
                     <Typography.Paragraph>
                       <ul style={{ fontSize: "14px" }}>
                         {formValue.relatedNews &&
-                          formValue.relatedNews.checkedList.map(item =>
+                          formValue.relatedNews.map(item =>
                             <div key={item}>
                               <a
                                 key={item}
@@ -215,7 +214,7 @@ class Editor extends React.Component {
                     })(
                       <Cascader
                         placeholder="请选择分类"
-                        options={Category}
+                        options={CategoryCascade}
                         expandTrigger="hover"
                       />
                     )}
@@ -233,7 +232,8 @@ class Editor extends React.Component {
                     {this.props.form.getFieldDecorator('stock', {
                       rules: [{ required: false, message: '请输入股票代码!' }],
                     })(
-                      <Input placeholder='请输入股票代码' />
+                      // <Input  />
+                      <EditorStock />
                     )}
                   </Form.Item>
                   <Form.Item>

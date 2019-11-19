@@ -232,10 +232,26 @@ export const editorApi = {
       console.log(err)
     }
   },
+
+  listStock : async (data,callback) => {
+    try {
+      let rst = await pkgAxios({
+        url : `stock/`,
+        method : 'GET',
+        params : data
+      })
+      console.log(rst)
+      callback(rst.data)
+    } catch(err) {
+      console.log(err)
+    }
+  },
+
+
   postNews : async (data,callback) => {
+    console.log(data)
     const wrappedData = {...data}
-    wrappedData.content = data.content.model
-    wrappedData.relatedNews = data.relatedNews===undefined?[]:data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
+    wrappedData.relatedNews = data.relatedNews===undefined?[]:data.relatedNews.map(item=>item.slice(0, item.indexOf('@')))
     wrappedData.request_category = data.request_category[1]
     try {
       let rst = await pkgAxios({
@@ -251,8 +267,6 @@ export const editorApi = {
   },
   putNews : async (data,callback) => {
     const wrappedData = {...data}
-    wrappedData.content = data.content.model
-    wrappedData.relatedNews = data.relatedNews===undefined?[]:data.relatedNews.checkedList.map(item=>item.slice(0, item.indexOf('@')))
     wrappedData.request_category = data.request_category[1]
     try {
       let rst = await pkgAxios({
@@ -266,7 +280,6 @@ export const editorApi = {
       console.log(err)
     }
   },
-
 }
 
 export const checkApi = {

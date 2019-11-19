@@ -3,7 +3,7 @@ import { UserContext }  from '../../utils/User'
 import News from '../../components/News';
 import { newsApi } from '../../utils/api'
 import { message } from 'antd'
-import categoryStatic from '../../components/Editor/CategoryStatic'
+import { CategoryDict } from '../../utils/Category'
 
 class NewsContainer extends React.Component {
 
@@ -123,7 +123,7 @@ class NewsContainer extends React.Component {
     const data = {
       search_category : value[0],
       search_sub_category : value.length===2
-        ?categoryStatic[value[1]].sub_category_name
+        ?CategoryDict[value[1]].sub_category_name
         :''
     }
     newsApi.listNews(

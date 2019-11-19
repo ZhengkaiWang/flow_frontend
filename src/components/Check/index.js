@@ -14,7 +14,7 @@ class Check extends React.Component {
     return (
       <div>
         <ContentHeader
-          data={{title:"审核新闻",Link:"/check"}}
+          data={{title:"审核新闻",link:"/check"}}
           components={{
             extra: [
               <Switch
