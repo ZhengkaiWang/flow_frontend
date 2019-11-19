@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 
 //axios.defaults.withCredentials=true;
 const pkgAxios = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/v1/flow',  
+    baseURL: '/api/v1/flow',  
     timeout: 500000,
     withCredentials: true,
 })

@@ -3,18 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
     "antd": "^3.25.1",
     "axios": "^0.19.0",
     "babel-plugin-import": "^1.12.2",
     "customize-cra": "^0.8.0",
+    "dayjs": "^1.8.17",
     "draft-js": "^0.11.1",
     "highcharts": "^7.2.0",
     "highcharts-react-official": "^2.2.2",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.1",
-    "moment": "^2.24.0",
     "rc-animate": "^2.10.1",
     "react": "^16.9.0",
+    "react-app-polyfill": "^1.0.4",
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.9.0",
     "react-froala-wysiwyg": "^2.8.5",
@@ -38,16 +40,19 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "ie 11"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "ie 11"
     ]
   },
   "devDependencies": {
     "webpack-bundle-analyzer": "^3.6.0"
   },
-  "homepage": "http://127.0.0.1:8080/flow"
+  "homepage": "http://127.0.0.1:8080/flow",
+  "proxy": "http://127.0.0.1:8000"
 }

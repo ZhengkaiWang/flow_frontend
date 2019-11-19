@@ -7,9 +7,9 @@ const { override, fixBabelImports, addBundleVisualizer } = require('customize-cr
      style: 'css',
    }),
   //  addBundleVisualizer({
-  //   analyzerMode: "static",
-  //   reportFilename: "report.html"
-  //   //analyzerMode: 'server',
+  //   //analyzerMode: "static",
+  //   //reportFilename: "report.html",
+  //   analyzerMode: 'server',
   // }),
   (config) => {
     config.module.rules.push({

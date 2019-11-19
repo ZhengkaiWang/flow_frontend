@@ -4,7 +4,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/js/froala_editor.pkgd.min.js';
 import FroalaEditor from 'react-froala-wysiwyg'
 import 'font-awesome/css/font-awesome.css';
-
+import Cookies from 'js-cookie'
 import $ from 'jquery'
 import jQuery from 'jquery'
 window.$ = $
@@ -32,7 +32,17 @@ class EditorText extends React.Component {
       '|', 'html', '|', 'undo', 'redo'],
     quickInsertButtons: [],
     quickInsertTags: [],
-    
+
+    imageUploadURL: '/article/upload/image/',
+    imageUploadMethod: 'POST',
+    imageUploadParam: 'article_image',
+    imageUploadParams: {
+      csrfmiddlewaretoken:  Cookies.get('csrftoken'),
+    },
+    imageManagerDeleteURL: '/article/delete/image/',
+    imageMaxSize: 10 * 1024 * 1024,
+    imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+
     events: {
       'froalaEditor.initialized': (e, editor) => {
         this.props.method.handleUpstream(editor)
@@ -60,18 +70,18 @@ class EditorText extends React.Component {
     }
   }
 
-  handleModelChange = (model) => 
+  handleModelChange = (model) =>
     this.triggerChange({ model: model })
 
 
   render() {
     return (
 
-        <FroalaEditor
-          model={this.state.model}
-          onModelChange={this.handleModelChange}
-          config={this.config}
-        />
+      <FroalaEditor
+        model={this.state.model}
+        onModelChange={this.handleModelChange}
+        config={this.config}
+      />
     )
   }
 }
