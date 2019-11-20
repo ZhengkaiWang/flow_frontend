@@ -71,7 +71,7 @@ class Editor extends React.Component {
         layout="horizontal"
         style={{ padding: 0, margin: 0 }}
       >
-        <ContentHeader data={{ title: "编辑新闻", lind: "/editor/" }} />
+        <ContentHeader data={{ title: "编辑新闻", link: "/editor/" }} />
         <Row>
           <Col span={24} lg={16}><div style={{ padding: 12 }}>
             <div style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12}}>新闻预览</div>

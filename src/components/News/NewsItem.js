@@ -34,7 +34,7 @@ class NewsItem extends React.Component {
         >
 
           <Row type="flex" justify="center" >
-            <Col span={24} lg={16}>
+            <Col span={24} lg={18}>
               <Card
                 style={this.context.device==="mobile"
                 ?{ margin: 0, borderRight: "0px solid #e8e8e8" }
@@ -45,7 +45,7 @@ class NewsItem extends React.Component {
                 <div dangerouslySetInnerHTML={{ __html: newsInfo.content }}></div>
               </Card>
             </Col>
-            <Col span={24} lg={8} >
+            <Col span={24} lg={6} >
               <Card
                 style={{ margin: 0 }}
                 bodyStyle={{ padding: 0, paddingLeft: 12 }}

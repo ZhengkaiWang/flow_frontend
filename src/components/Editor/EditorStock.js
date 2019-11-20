@@ -1,27 +1,27 @@
 import React from 'react'
 import { editorApi } from '../../utils/api'
-import {AutoComplete, Input} from 'antd'
+import { AutoComplete, Input, Tag } from 'antd'
 
 class EditorStock extends React.Component {
-  
+
   static getDerivedStateFromProps(nextProps, prevState) {
     // Should be a controlled component.
     if ('value' in nextProps) {
       return {
         ...({
-          stockList:prevState.stockList,
-          stock:nextProps.value||'',
+          stockList: prevState.stockList,
+          stock: nextProps.value || '',
         })
       }
     }
     return null
   }
-  
+
   constructor(props) {
     super(props)
     this.state = {
-      relatedNewsList: [],
-      stock : props.value || ''
+      stockList: [],
+      stock: props.value || ''
     }
   }
 
@@ -32,25 +32,55 @@ class EditorStock extends React.Component {
     }
   }
 
+  handleSelect = value => {
+    const changedValue = `${this.state.stock}${this.state.stock===''?'':','}${value}`
+    console.log(changedValue)
+    this.setState({ stock: changedValue })
+    this.triggerChange(changedValue)
+  }
+
   handleSearch = value => {
-    editorApi.listStock({search_keywords:value},rspData =>
+    editorApi.listStock({ search_keywords: value }, rspData =>
       this.setState({
-        stockList:rspData.map(item=>{return {value:item.TRADE_CODE,text:`${item.SEC_NAME} ${item.TRADE_CODE}`}})
+        stockList: rspData.map(item => { return { value: item.TRADE_CODE, text: `${item.SEC_NAME} ${item.TRADE_CODE}` } })
       })
     )
   }
 
-    
+  handleClose = value => {
+    console.log(this.state.stock)
+    let tmpState = this.state.stock.split(',')
+    tmpState.splice(tmpState.findIndex(item=>item===value),1)
+    const changedValue = String(tmpState)
+    console.log(changedValue)
+    this.setState({ stock: changedValue })
+    this.triggerChange(changedValue)
+  }
+
+  handleInputChange = e => {
+    const value = e.currentTarget.value
+    this.setState({stock:value})
+    this.triggerChange(value)
+  }
+
+
   render() {
     return (
-      <AutoComplete 
-      placeholder='请输入股票代码'
-      onSelect={this.triggerChange}
-      dataSource={this.state.stockList}>
-      <Input.Search
-       onSearch={this.handleSearch}
-      />
-      </AutoComplete>   
+      <div>
+        <AutoComplete
+          placeholder='股票代码搜索添加'
+          onSelect={this.handleSelect}
+          dataSource={this.state.stockList}>
+          <Input.Search
+            onSearch={this.handleSearch}
+          />
+        </AutoComplete>
+        <Input 
+          placeholder="自定义添加" 
+          value={this.state.stock} 
+          addonBefore="股票代码"
+          onChange={this.handleInputChange}/>
+      </div>
     )
   }
 }

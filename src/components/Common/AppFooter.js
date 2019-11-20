@@ -2,7 +2,7 @@ import React from 'react'
 import { Layout, Row, Col, Typography } from 'antd'
 
 const AppFooter = () =>
-  <Layout.Footer style={{paddingTop:36,margin:0}}>
+  <Layout.Footer style={{margin:0,padding:24}}>
     <Row gutter={24}>
       <Col span={24} lg={12}>
         <Typography.Paragraph>

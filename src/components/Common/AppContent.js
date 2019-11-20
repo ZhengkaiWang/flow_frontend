@@ -15,7 +15,7 @@ const AppContent = () =>
       <Layout.Content
         style={
           value.device === "mobile"
-            ? { background: '#fff', padding: 24, margin: 0 }
+            ? { background: '#fff', padding: 18, paddingRight: 12,margin: 0 }
             : { background: '#fff', padding: 36, margin: 0 }}
       >
         <React.Suspense fallback={<Skeleton />}>

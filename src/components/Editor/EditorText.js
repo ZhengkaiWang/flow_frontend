@@ -35,6 +35,8 @@ class EditorText extends React.Component {
     quickInsertButtons: [],
     quickInsertTags: [],
 
+    imageDefaultWidth: "100",
+    imageResizeWithPercent: true,
     imageUploadURL: '/article/upload/image/',
     imageUploadMethod: 'POST',
     imageUploadParam: 'article_image',

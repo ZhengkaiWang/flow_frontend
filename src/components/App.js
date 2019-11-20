@@ -14,8 +14,8 @@ const App = () =>
         <Layout
           style={
             value.device === "mobile"
-              ? { padding: '0px', maxWidth: '1200px', margin: 'auto' }
-              : { padding: '24px', maxWidth: '1200px', margin: 'auto' }}
+              ? { padding: '0px', maxWidth: '1200px', margin: 'auto', width:'100%' }
+              : { padding: '24px', maxWidth: '1200px', margin: 'auto', width:'100%' }}
         >
           <Layout >
             <AppContent />
