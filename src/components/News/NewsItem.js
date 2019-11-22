@@ -39,9 +39,12 @@ class NewsItem extends React.Component {
                 style={this.context.device==="mobile"
                 ?{ margin: 0, borderRight: "0px solid #e8e8e8" }
                 :{ margin: 0, borderRight: "1px solid #e8e8e8" }}
-                bodyStyle={{ padding: 12, paddingTop: 0 }}
+                bodyStyle={this.context.device==="mobile"
+                ?{ padding: '0px 0px 12px 0px' }
+                :{ padding: '0px 12px 12px 12px' }}
                 bordered={false}
               >
+                {/* <NewsImg></NewsImg> */}
                 <div dangerouslySetInnerHTML={{ __html: newsInfo.content }}></div>
               </Card>
             </Col>
@@ -53,7 +56,7 @@ class NewsItem extends React.Component {
               >
                 <Tag color="#108ee9" style={{marginBottom:8}}>{newsInfo.category.category_name}</Tag>
                 <Tag color="#108ee9" style={{marginBottom:8}}>{newsInfo.category.sub_category_name}</Tag>
-                {newsInfo.stock && <Tag >{`股票代码:${newsInfo.stock}`}</Tag>}
+                {newsInfo.stock && <Tag style={{whiteSpace:"normal"}}>{`股票代码:${newsInfo.stock}`}</Tag>}
                 <br />
                 <br />
                 <Typography.Paragraph>

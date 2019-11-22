@@ -102,7 +102,7 @@ class Editor extends React.Component {
                   >
                     {formValue.request_category && <Tag color="#108ee9">{CategoryDict[formValue.request_category[1]].category_name}</Tag>}
                     {formValue.request_category && <Tag color="#108ee9">{CategoryDict[formValue.request_category[1]].sub_category_name}</Tag>}
-                    {formValue.stock && <Tag >{`股票代码:${formValue.stock}`}</Tag>}
+                    {formValue.stock && <Tag style={{whiteSpace:"normal"}}>{`股票代码:${formValue.stock}`}</Tag>}
                     <br />
                     <br />
                     <Typography.Paragraph>
@@ -180,7 +180,7 @@ class Editor extends React.Component {
             <div style={{ padding: 12, paddingBottom: 0 }}>
               <div style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>信息设置</div>
               <Form.Item>
-                <Button htmlType="submit" block>
+                <Button block onClick={this.handleEditorSubmit}>
                   确认信息并提交
               </Button>
               </Form.Item>

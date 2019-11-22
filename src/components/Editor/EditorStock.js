@@ -1,6 +1,6 @@
 import React from 'react'
 import { editorApi } from '../../utils/api'
-import { AutoComplete, Input, Tag } from 'antd'
+import { AutoComplete, Input } from 'antd'
 
 class EditorStock extends React.Component {
 
@@ -42,7 +42,7 @@ class EditorStock extends React.Component {
   handleSearch = value => {
     editorApi.listStock({ search_keywords: value }, rspData =>
       this.setState({
-        stockList: rspData.map(item => { return { value: item.TRADE_CODE, text: `${item.SEC_NAME} ${item.TRADE_CODE}` } })
+        stockList: rspData.map(item => `${item.SEC_NAME} ${item.TRADE_CODE}`)
       })
     )
   }

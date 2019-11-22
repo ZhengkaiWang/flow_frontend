@@ -138,7 +138,7 @@ export const newsApi = {
     ws.onopen = () => {
       console.log("Connection open ...");
       ws.send(JSON.stringify({
-        'message': 'hhh'
+        'message': 'init message =>'
       }));
     }
     ws.onerror = (evt) => console.log(evt)
