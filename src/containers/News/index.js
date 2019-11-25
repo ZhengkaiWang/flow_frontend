@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserContext }  from '../../utils/User'
+import { UserContext } from '../../utils/User'
 import News from '../../components/News';
 import { newsApi } from '../../utils/api'
 import { message } from 'antd'
@@ -14,16 +14,17 @@ class NewsContainer extends React.Component {
     const ws = new WebSocket("ws://127.0.0.1:8000/ws/news/");
     this.state = {
       newsInfoList: [],
-      other: 'other',
-      ws: ws
+      page: 1,
+      ws: ws,
+      count:1
     }
   }
 
   handleListNews = (data) => {
-    this.setState({ newsInfoList: [] })
-    data.forEach(
-      item => {
-        const newsItem = {
+    const tmpNewsInfoList = []
+    data.results.forEach(
+      item =>
+        tmpNewsInfoList.push({
           id: item['id'],
           time: item['create_date'],
           content: item['content'],
@@ -34,12 +35,38 @@ class NewsContainer extends React.Component {
           relate: item['relate'],
           stock: item['stock'],
           source: item['source']
-        }
-        this.setState({
-          newsInfoList: [...this.state.newsInfoList, newsItem]
         })
-      }
     )
+    this.setState({
+      newsInfoList: [...tmpNewsInfoList],
+      count: data.count,
+      page: data.page
+    })
+  }
+
+
+  handleLoadMoreNews = (data) => {
+    const tmpNewsInfoList = []
+    data.results.forEach(
+      item =>
+        tmpNewsInfoList.push({
+          id: item['id'],
+          time: item['create_date'],
+          content: item['content'],
+          title: item['title'],
+          like: item['like'],
+          comment: item.comment,
+          category: item['category'],
+          relate: item['relate'],
+          stock: item['stock'],
+          source: item['source']
+        })
+    )
+    this.setState({
+      newsInfoList: [...tmpNewsInfoList],
+      count: data.count,
+      page: data.page
+    })
   }
 
   handleWS = (msgObj) => {
@@ -67,7 +94,7 @@ class NewsContainer extends React.Component {
 
 
   componentDidMount() {
-    newsApi.listNews(this.handleListNews, { publish_status: 1 })
+    newsApi.listNews(this.handleListNews, { publish_status:1, page:this.state.page })
     console.log('componentDidMount')
     newsApi.websocket(this.handleWS, this.state.ws)
   }
@@ -88,7 +115,7 @@ class NewsContainer extends React.Component {
       ? newsApi.postLike(data => {
         const index = this.state.newsInfoList.findIndex(item => item.id === params)
         const tmpState = this.state.newsInfoList.slice()
-        tmpState[index].like = [...tmpState[index].like,data]
+        tmpState[index].like = [...tmpState[index].like, data]
         this.setState({ newsInfoList: tmpState })
       },
         {
@@ -113,7 +140,7 @@ class NewsContainer extends React.Component {
     newsApi.listNews(
       this.handleListNews,
       {
-        publish_status : 1,
+        publish_status: 1,
         search_keywords: value
       }
     )
@@ -121,38 +148,52 @@ class NewsContainer extends React.Component {
 
   handleFilter = value => {
     const data = {
-      search_category : value[0],
-      search_sub_category : value.length===2
-        ?CategoryDict[value[1]].sub_category_name
-        :''
+      search_category: value[0],
+      search_sub_category: value.length === 2
+        ? CategoryDict[value[1]].sub_category_name
+        : ''
     }
     newsApi.listNews(
       this.handleListNews,
       {
-        publish_status : 1,
+        publish_status: 1,
         ...data
       }
     )
 
   }
+  
+  loadMore = (page, pageSize) => {
+    newsApi.listNews(
+      this.handleLoadMoreNews,
+      {
+        publish_status: 1,
+        page : page,
+        size: pageSize
+      }
+    )
+  }
 
   render() {
-    
+
     return (
 
-        <News
-          data={{
-            user: this.context.userID,
-            newsInfoList: this.state.newsInfoList,
-          }}
-          method={{
-            handleSearch: this.handleSearch,
-            handleFilter: this.handleFilter,
-            onNewsLikeClick: this.onNewsLikeClick,
-            onNewsCommentClick: this.onNewsCommentClick,
-          }}
+      <News
+        data={{
+          user: this.context.userID,
+          newsInfoList: this.state.newsInfoList,
+          page: this.state.page,
+          count: this.state.count
+        }}
+        method={{
+          loadMore: this.loadMore,
+          handleSearch: this.handleSearch,
+          handleFilter: this.handleFilter,
+          onNewsLikeClick: this.onNewsLikeClick,
+          onNewsCommentClick: this.onNewsCommentClick,
+        }}
 
-        />
+      />
 
     )
   }

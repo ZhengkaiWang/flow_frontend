@@ -62,13 +62,13 @@ export const newsApi = {
         method : 'GET',
         params : params
       })
-      const tmpData  = [...rst.data]
-      tmpData.forEach(item => {
-        if(item['comment'][0] === 'root'){
-          item['comment'].shift()
-        item.comment.forEach(item => item['treeLevel']=item.level
-          )}}
-        )
+      // const tmpData  = [...rst.data]
+      // tmpData.forEach(item => {
+      //   if(item['comment'][0] === 'root'){
+      //     item['comment'].shift()
+      //   item.comment.forEach(item => item['treeLevel']=item.level
+      //     )}}
+      //   )
       console.log(rst)
       callback(rst.data)
     } catch(err) {

@@ -1,16 +1,15 @@
 import React from 'react'
 import NewsItem from './NewsItem'
-import {CategoryCascade} from '../../utils/Category'
+import { CategoryCascade } from '../../utils/Category'
 import ContentHeader from '../Common/ContentHeader'
-import { Timeline, Icon, Input, Cascader } from 'antd'
+import { Timeline, Icon, Input, Cascader, Pagination } from 'antd'
 
 class News extends React.Component {
   render() {
-    const newsInfoList = this.props.data.newsInfoList
     return (
       <div>
         <ContentHeader
-          data={{link:'/news/', title:'新闻信息流'}}
+          data={{ link: '/news/', title: '新闻信息流' }}
           components={{
             extra: [<Cascader
               changeOnSelect
@@ -31,7 +30,7 @@ class News extends React.Component {
         <Timeline pending >
           <Timeline.Item dot={<Icon type="fire" />}>热点追踪中...</Timeline.Item>
           {
-            newsInfoList.map(
+            this.props.data.newsInfoList.map(
               item =>
                 <Timeline.Item key={item.id}>
                   {`${item.time.slice(item.time.indexOf('-') + 1, item.time.indexOf('T'))}  ${item.time.substr(item.time.indexOf('T') + 1, 8)}`}
@@ -49,6 +48,17 @@ class News extends React.Component {
                 </Timeline.Item>
             )}
         </Timeline>
+        <Pagination
+          style={{ textAlign: "center", marginTop: 12 }}
+          // size="small"
+          //simple
+          showSizeChanger
+          showQuickJumper
+          onShowSizeChange={this.props.method.loadMore}
+          defaultCurrent={1}
+          total={this.props.data.count}
+          onChange={this.props.method.loadMore}
+        />
       </div>
     )
   }
