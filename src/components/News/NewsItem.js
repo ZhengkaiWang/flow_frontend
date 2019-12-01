@@ -2,7 +2,7 @@ import React from 'react'
 import NewsTreeComment from './NewsComment'
 import NewsLike from './NewsLike'
 import generateArticleTitle from '../../utils/generateArticleTitle'
-//import NewsImg from './NewsImg'
+// import Chart16 from './NewsChart'
 import { ScreenContext } from '../../utils/Screen'
 import { Link } from 'react-router-dom'
 import { Icon, Card, Row, Col, message, Typography, Tag, Tooltip } from 'antd'
@@ -44,7 +44,7 @@ class NewsItem extends React.Component {
                 :{ padding: '0px 12px 12px 12px' }}
                 bordered={false}
               >
-                {/* <NewsImg></NewsImg> */}
+                {/* <Chart16></Chart16> */}
                 <div dangerouslySetInnerHTML={{ __html: newsInfo.content }}></div>
               </Card>
             </Col>

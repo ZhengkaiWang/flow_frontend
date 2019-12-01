@@ -8,6 +8,7 @@ const SingleNews = React.lazy(() => import('../../containers/News/SingleNews'))
 const News = React.lazy(() => import('../../containers/News'))
 const Editor = React.lazy(() => import('../../containers/Editor'))
 const Check = React.lazy(() => import('../../containers/Check'))
+const Chat = React.lazy(() => import('../Chat/AdminChat'))
 
 const AppContent = () =>
   <ScreenContext.Consumer>
@@ -25,6 +26,7 @@ const AppContent = () =>
           <Route path='/editor/:id' component={Editor} />
           <Route exact path='/editor' component={Editor} />
           <Route exact path='/check' component={Check} />
+          <Route exact path='/chat' component={Chat} />
         </React.Suspense>
       </Layout.Content>
     }

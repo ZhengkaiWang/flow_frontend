@@ -283,7 +283,7 @@ export const editorApi = {
 }
 
 export const checkApi = {
-  ListNews : async (callback, data) => {
+  listNews : async (callback, data) => {
     try {
       let rst = await pkgAxios({
         url : 'news/',

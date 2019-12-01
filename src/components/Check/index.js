@@ -1,6 +1,6 @@
 import React from 'react'
 import CheckItem from './CheckItem'
-import { Switch, Row, Col } from 'antd';
+import { Switch, Row, Col, Pagination } from 'antd';
 import ContentHeader from '../Common/ContentHeader'
 
 class Check extends React.Component {
@@ -49,6 +49,17 @@ class Check extends React.Component {
           }
         )}
         </Row>
+          <Pagination
+        style={{ textAlign: "center", marginTop: 12 }}
+        // size="small"
+        //simple
+        current={this.props.data.page}
+        total={this.props.data.count}
+        showSizeChanger
+        showQuickJumper
+        onShowSizeChange={this.props.method.hanglePage}
+        onChange={this.props.method.hanglePage}
+      />
         <hr />
       </div>
     )

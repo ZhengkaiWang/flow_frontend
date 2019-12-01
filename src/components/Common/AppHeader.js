@@ -58,6 +58,12 @@ class AppHeader extends React.Component {
               审核
           </NavLink>
           </Menu.Item>
+          <Menu.Item key="chat">
+            <NavLink to="/chat/">
+              <Icon type="message" />
+              聊天
+          </NavLink>
+          </Menu.Item>
           {/* <Menu.SubMenu
         title={
           <span className="submenu-title-wrapper">

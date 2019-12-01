@@ -11,66 +11,29 @@ class NewsContainer extends React.Component {
 
   constructor(props) {
     super(props)
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/news/");
+    // const ws = new WebSocket("ws://127.0.0.1:8000/ws/news_backup/user1");
     this.state = {
       newsInfoList: [],
-      page: 1,
-      ws: ws,
+      //ws: ws,
+      page:1,
       count:1
     }
   }
 
-  handleListNews = (data) => {
+  handleListNews = data => {
     const tmpNewsInfoList = []
     data.results.forEach(
-      item =>
-        tmpNewsInfoList.push({
-          id: item['id'],
-          time: item['create_date'],
-          content: item['content'],
-          title: item['title'],
-          like: item['like'],
-          comment: item.comment,
-          category: item['category'],
-          relate: item['relate'],
-          stock: item['stock'],
-          source: item['source']
-        })
+      item => tmpNewsInfoList.push({...item,time: item['create_date']})
     )
     this.setState({
       newsInfoList: [...tmpNewsInfoList],
       count: data.count,
-      page: data.page
-    })
-  }
-
-
-  handleLoadMoreNews = (data) => {
-    const tmpNewsInfoList = []
-    data.results.forEach(
-      item =>
-        tmpNewsInfoList.push({
-          id: item['id'],
-          time: item['create_date'],
-          content: item['content'],
-          title: item['title'],
-          like: item['like'],
-          comment: item.comment,
-          category: item['category'],
-          relate: item['relate'],
-          stock: item['stock'],
-          source: item['source']
-        })
-    )
-    this.setState({
-      newsInfoList: [...tmpNewsInfoList],
-      count: data.count,
-      page: data.page
     })
   }
 
   handleWS = (msgObj) => {
     const data = JSON.parse(msgObj.data)
+    console.log(data)
     new Notification(data['title'], {
       body: data['content']
     })
@@ -95,12 +58,11 @@ class NewsContainer extends React.Component {
 
   componentDidMount() {
     newsApi.listNews(this.handleListNews, { publish_status:1, page:this.state.page })
-    console.log('componentDidMount')
-    newsApi.websocket(this.handleWS, this.state.ws)
+    //newsApi.websocket(this.handleWS, this.state.ws)
   }
 
   componentWillUnmount() {
-    this.state.ws.close()
+    //this.state.ws.close()
   }
 
   onNewsCommentClick = (data) => {
@@ -110,7 +72,6 @@ class NewsContainer extends React.Component {
   }
   //? delete or post
   onNewsLikeClick = (params, flag) => {
-
     flag
       ? newsApi.postLike(data => {
         const index = this.state.newsInfoList.findIndex(item => item.id === params)
@@ -160,24 +121,23 @@ class NewsContainer extends React.Component {
         ...data
       }
     )
-
   }
   
-  loadMore = (page, pageSize) => {
+  hanglePage = (page, pageSize) => {
     newsApi.listNews(
-      this.handleLoadMoreNews,
+      this.handleListNews,
       {
         publish_status: 1,
         page : page,
         size: pageSize
       }
     )
+    this.setState({page:page})
   }
 
   render() {
 
     return (
-
       <News
         data={{
           user: this.context.userID,
@@ -186,15 +146,13 @@ class NewsContainer extends React.Component {
           count: this.state.count
         }}
         method={{
-          loadMore: this.loadMore,
+          hanglePage: this.hanglePage,
           handleSearch: this.handleSearch,
           handleFilter: this.handleFilter,
           onNewsLikeClick: this.onNewsLikeClick,
           onNewsCommentClick: this.onNewsCommentClick,
         }}
-
       />
-
     )
   }
 }

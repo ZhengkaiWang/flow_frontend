@@ -5,6 +5,7 @@ import { UserContext } from '../../utils/User'
 
 class ContentHeader extends React.Component {
   static contextType = UserContext
+
   render() {
     return (
       <PageHeader
