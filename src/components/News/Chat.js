@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Launcher } from 'react-chat-window'
 import { UserContext } from '../../utils/User'
+import { Widget, addResponseMessage } from 'react-chat-widget';
+import 'react-chat-widget/lib/styles.css';
 
 class Demo extends Component {
   static contextType = UserContext
@@ -9,81 +10,75 @@ class Demo extends Component {
     this.state = {
       messageList: [],
       newMessagesCount: 0,
-      isOpen: true
+      isOpen: false
     };
   }
 
   componentDidMount() {
     this.ws = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${this.context.userID}`)
     this.ws.onopen = () => this.handleInit()
-    this.ws.onmessage = evt =>
+    this.ws.onmessage = evt =>{
       this.handleReceiveMsg(JSON.parse(evt.data))
+    }
   }
+
 
   handleInit = () => this.ws.send(JSON.stringify({
     status: 200,
     type: 'init',
-    content: {
-      userId: this.context.userID,
-      userName: this.context.userName
+    other:'',
+    groupName: this.context.userID,
+    messagePack:{
+      receiver: {id: "receiverUserID", name: "receiverUserName"},
+      sender: {id: this.context.userID, name: this.context.userName},
+      message: 'Init chat channel',
+      date: "date",
+      index:0
     },
-    from: 'user',
-    to: 'server',
-    messagePack: {
-    }
   }))
 
   handleReceiveMsg = transferData => {
     //处理收到信息的逻辑
-    const { messagePack } = transferData
     transferData.type === 'init'
       ? this.setState({
-        messageList: [{
-          receiver: this.context.userID,
-          sender: 1,
-          author: 'them',
-          type: 'text',
-          data: { text: transferData.content },
-          key: this.state.messageList.length
-        }]
+        messageList: [transferData.messagePack]
       })
       : this.setState({
-        messageList: [...this.state.messageList, {
-          receiver: this.context.userID,
-          sender: 1,
-          author: 'them',
-          type: messagePack.type,
-          data: { text: messagePack.data.text }
-        }],
+        messageList: [...this.state.messageList, [transferData.messagePack]],
         newMessagesCount: this.state.isOpen ? 0 : this.state.newMessagesCount + 1
       })
+      addResponseMessage(
+        String(transferData.messagePack.message))
   }
 
-  handleSendMsg = messageRaw => {
+  handleSendMsg = message => {
     const transferData = {
       status: 200,
       type: 'message',
-      content: {},
-      from: 'user',
-      to: 'server',
-      chatUserID: this.context.userID,
-      chatUserName: this.context.userName,
+      groupName: this.context.userID,
+      other: '',
       messagePack: {
-        receiver: 1,
-        sender: this.context.userID,
-        ...messageRaw,
+        receiver: {id: "receiverUserID", name: "receiverUserName"},
+        sender: { id: this.context.userID, name: this.context.userName },
+        message: message,
+        date: "date",
       }
     }
-    const { messagePack } = transferData
     this.ws.send(JSON.stringify(transferData))
-    this.setState({ messageList: [...this.state.messageList, messagePack] })
+    this.setState({ messageList: [...this.state.messageList, transferData.messagePack] })
   }
 
 
 
   render() {
     return (<div>
-      <Launcher
+      <Widget
+        handleNewUserMessage={this.handleSendMsg}
+        badge={this.state.newMessagesCount}
+        title="Chat with VMP@hzinsights"
+        subtitle="潘老师"
+      />
+      {/* <Launcher
         agentProfile={{
           teamName: 'HZ chat',
           imageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png'
@@ -94,7 +89,7 @@ class Demo extends Component {
         isOpen={this.state.isOpen}
         handleClick={() => this.setState({ isOpen: !this.state.isOpen, newMessagesCount: 0 })}
         showEmoji
-      />
+      /> */}
     </div>)
   }
 }

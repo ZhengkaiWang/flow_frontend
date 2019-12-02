@@ -10,43 +10,34 @@ class ChatBack extends React.Component {
     super(props)
     this.state = {
       messageSet: {},
-      userList: [],
       inputValue: '',
+      nameMap: {},
       currentChat: 0,
     }
   }
 
   onChange = ({ target: { value } }) => {
-    this.setState({ inputValue:value });
+    this.setState({ inputValue: value });
   }
 
-  
 
   componentDidMount() {
-    this.adminWS = new WebSocket("ws://127.0.0.1:8000/ws/admin")
+    this.adminWS = new WebSocket(`ws://127.0.0.1:8000/ws/admin/${this.context.userID}`)
     this.adminWS.onmessage = evt =>
       this.handleReceiveMsg(JSON.parse(evt.data))
   }
 
   handleReceiveMsg = transferData => {
     //处理收到信息的逻辑
-    const { messagePack } = transferData
     const tmpMessageSet = this.state.messageSet
     if (transferData.type === 'init') {
-      tmpMessageSet[transferData.content.chat_group_name] = []
+      tmpMessageSet[transferData.groupName] = []
       this.setState({ messageSet: tmpMessageSet })
-      console.log(`添加 ${transferData.content.chat_group_name} 成功`)
+      console.log(`添加 ${transferData.groupName} 成功`)
     }
     else {
-      tmpMessageSet[transferData.chat_group_name] = 
-        [...tmpMessageSet[transferData.chat_group_name], {
-        receiver: this.context.userID,
-        sender: 1,
-        author: 'them',
-        type: messagePack.type,
-        data: { text: messagePack.data.text },
-        key: tmpMessageSet[transferData.chat_group_name].length
-      }]
+      tmpMessageSet[transferData.groupName] =
+        [...tmpMessageSet[transferData.groupName], transferData.messagePack]
       this.setState({ messageSet: tmpMessageSet })
     }
   }
@@ -55,25 +46,21 @@ class ChatBack extends React.Component {
     const transferData = {
       status: 200,
       type: 'message',
-      content: {},
-      from: 'admin',
-      to: 'server',
-      senderId: 1,
-      receiverId: this.state.currentChat,
+      groupName: this.state.currentChat,
+      other: '',
       messagePack: {
-        receiver: 1,
-        sender: this.context.userID,
-        author: 'me',
-        type: 'text',
-        data: { text: this.state.inputValue },
-        key: this.state.messageSet[this.state.currentChat].length
-      }
+        receiver: {id: this.state.currentChat, name: "receiverUserName"},
+        sender: { id: this.context.userID, name: this.context.userName },
+        message: this.state.inputValue,
+        date: "date",
+        index: 0
+      },
     }
-    const { messagePack } = transferData
+
     const tmpMessageSet = this.state.messageSet
     this.adminWS.send(JSON.stringify(transferData))
-    tmpMessageSet[this.state.currentChat] = 
-      [...tmpMessageSet[this.state.currentChat],messagePack]
+    tmpMessageSet[this.state.currentChat] =
+      [...tmpMessageSet[this.state.currentChat], transferData.messagePack]
     this.setState({
       messageSet: tmpMessageSet,
       inputValue: ''
@@ -81,13 +68,13 @@ class ChatBack extends React.Component {
   }
 
   changeChat = activeKey => {
-    this.setState({currentChat: activeKey})
+    this.setState({ currentChat: activeKey })
   }
 
   render() {
     return (
-      <Tabs 
-        tabPosition="left" 
+      <Tabs
+        tabPosition="left"
         style={{ minHeight: 400 }}
         //type="card"
         onChange={this.changeChat}
@@ -102,9 +89,13 @@ class ChatBack extends React.Component {
               bodyStyle={{ padding: 12 }}
             >
               {this.state.messageSet[this.state.currentChat] && this.state.messageSet[this.state.currentChat].map(item =>
-                item.author === 'me'
-                  ? <div key={item.key} style={{ textAlign: 'right' }}>{item.data.text}</div>
-                  : <div key={item.key} style={{ textAlign: 'left' }}>{item.data.text}</div>
+                item.sender.id === this.context.userID
+                  ? <div key={item.key} style={{ textAlign: 'right' }}>
+                    {`${item.sender.name}:${item.message}`}
+                  </div>
+                  : <div key={item.key} style={{ textAlign: 'left' }}>
+                    {`${item.sender.name}:${item.message}`}
+                  </div>
               )}
             </Card>
             <Input.TextArea
