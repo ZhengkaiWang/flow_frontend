@@ -66,7 +66,7 @@ class EditorStock extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <AutoComplete
           placeholder='股票代码搜索添加'
           onSelect={this.handleSelect}
@@ -80,7 +80,7 @@ class EditorStock extends React.Component {
           value={this.state.stock} 
           addonBefore="股票代码"
           onChange={this.handleInputChange}/>
-      </div>
+      </>
     )
   }
 }

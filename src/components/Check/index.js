@@ -12,7 +12,7 @@ class Check extends React.Component {
   render() {
     const newsCheckList = this.props.data.newsCheckList
     return (
-      <div>
+      <>
         <ContentHeader
           data={{title:"审核新闻",link:"/check"}}
           components={{
@@ -61,7 +61,7 @@ class Check extends React.Component {
         onChange={this.props.method.hanglePage}
       />
         <hr />
-      </div>
+      </>
     )
   }
 }

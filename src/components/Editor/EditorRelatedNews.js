@@ -67,7 +67,7 @@ class EditorRelatedNews extends React.Component {
     
   render() {
     return (
-      <div>
+      <>
       <Row  type="flex" gutter={28}>
         <Col span={18}>
         <Input.Search
@@ -104,7 +104,7 @@ class EditorRelatedNews extends React.Component {
 
         </Checkbox.Group>
         </Spin>
-        </div>
+        </>
       
 
     )

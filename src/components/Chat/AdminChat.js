@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Input, Button, Tabs } from 'antd'
+import { Card, Input, Button, Tabs, notification } from 'antd'
 import { UserContext } from '../../utils/User'
 
 class ChatBack extends React.Component {
@@ -30,16 +30,40 @@ class ChatBack extends React.Component {
   handleReceiveMsg = transferData => {
     //处理收到信息的逻辑
     const tmpMessageSet = this.state.messageSet
+    const tmpNameMap = this.state.nameMap
     if (transferData.type === 'init') {
+      tmpNameMap[transferData.messagePack.sender.id] = transferData.messagePack.sender.name
       tmpMessageSet[transferData.groupName] = []
-      this.setState({ messageSet: tmpMessageSet })
-      console.log(`添加 ${transferData.groupName} 成功`)
+      this.setState({
+        messageSet: tmpMessageSet,
+        nameMap: tmpNameMap
+      })
+      notification['info']({
+        message: transferData.messagePack.sender.name,
+        description: transferData.messagePack.message
+      });
+    }
+    else if(transferData.type === 'del') {
+      notification['info']({
+        message: this.state.nameMap[transferData.groupName],
+        description: transferData.messagePack.message
+      });
+      delete tmpNameMap[transferData.groupName]
+      delete tmpMessageSet[transferData.groupName]
+      this.setState({
+        messageSet: tmpMessageSet,
+        nameMap: tmpNameMap
+      })
     }
     else {
       tmpMessageSet[transferData.groupName] =
         [...tmpMessageSet[transferData.groupName], transferData.messagePack]
       this.setState({ messageSet: tmpMessageSet })
+      new Notification(transferData.messagePack.sender.name, {
+        body: transferData.messagePack.message
+      })
     }
+
   }
 
   handleSendMsg = () => {
@@ -49,11 +73,11 @@ class ChatBack extends React.Component {
       groupName: this.state.currentChat,
       other: '',
       messagePack: {
-        receiver: {id: this.state.currentChat, name: "receiverUserName"},
+        receiver: { id: this.state.currentChat, name: this.state.nameMap[this.state.currentChat] },
         sender: { id: this.context.userID, name: this.context.userName },
         message: this.state.inputValue,
         date: "date",
-        index: 0
+        index: this.state.messageSet[this.state.currentChat].length
       },
     }
 
@@ -83,18 +107,28 @@ class ChatBack extends React.Component {
           <h3>聊天区</h3>
         </Tabs.TabPane>
         {Object.keys(this.state.messageSet).map(item =>
-          <Tabs.TabPane tab={item} key={item}>
+          <Tabs.TabPane tab={this.state.nameMap[item]} key={item}>
             <h3>聊天区</h3>
             <Card
               bodyStyle={{ padding: 12 }}
             >
               {this.state.messageSet[this.state.currentChat] && this.state.messageSet[this.state.currentChat].map(item =>
                 item.sender.id === this.context.userID
-                  ? <div key={item.key} style={{ textAlign: 'right' }}>
-                    {`${item.sender.name}:${item.message}`}
+                  ? <div key={item.index}>
+                    <div key={0} style={{ textAlign: 'right', fontWeight: "bold", fontSize: 12, fontStyle: "italic" }}>
+                      {`${item.sender.name}`}
+                    </div>
+                    <div key={1} style={{ textAlign: 'right', fontSize: 16, fontStyle: "italic" }}>
+                      {`${item.message}`}
+                    </div>
                   </div>
-                  : <div key={item.key} style={{ textAlign: 'left' }}>
-                    {`${item.sender.name}:${item.message}`}
+                  : <div key={item.index}>
+                    <div key={0} style={{ textAlign: 'left', fontWeight: "bold", fontSize: 12 }}>
+                      {`${item.sender.name}`}
+                    </div>
+                    <div key={1} style={{ textAlign: 'left', fontSize: 16 }}>
+                      {`${item.message}`}
+                    </div>
                   </div>
               )}
             </Card>

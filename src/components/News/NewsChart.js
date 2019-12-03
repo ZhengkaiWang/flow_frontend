@@ -132,7 +132,7 @@ class Chart_16 extends React.Component {
       ]
     };
     return (
-      <div>
+      <>
         <HighchartsReact
           highcharts={Highcharts}
           constructorType={"stockChart"}
@@ -140,7 +140,7 @@ class Chart_16 extends React.Component {
           ref="chartComponent"
         />
         {console.log(`Chart 16 ${this.state.status}`)}
-      </div>
+      </>
     );
   }
 }

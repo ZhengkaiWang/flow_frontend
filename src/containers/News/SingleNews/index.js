@@ -79,7 +79,7 @@ class SingleNewsContainer extends React.Component {
   render() {
 
     return (
-      <div>
+      <>
         <ContentHeader data={{ link: '/news/', title: '新闻信息流' }} />
         <Skeleton active loading={this.state.loading}>
           <NewsItem
@@ -94,7 +94,7 @@ class SingleNewsContainer extends React.Component {
 
           />
         </Skeleton>
-      </div>
+      </>
     )
   }
 }

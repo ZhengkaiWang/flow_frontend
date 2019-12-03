@@ -63,7 +63,7 @@ class NewsItem extends React.Component {
                   <ul style={{fontSize:fontSize}}>
                     {
                       newsInfo.relate.map(item =>
-                        <div>
+                        <>
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
@@ -78,7 +78,7 @@ class NewsItem extends React.Component {
                             })}
                           </a>
                           <br />
-                        </div>
+                        </>
                       )}
                   </ul>
                 </Typography.Paragraph>

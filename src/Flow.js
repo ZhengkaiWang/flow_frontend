@@ -10,43 +10,35 @@ import zhCN from 'antd/es/locale-provider/zh_CN';
 
 class Flow extends React.Component {
 
-  state = {
-    id: 1,
-    name: "超级管理员"
-  }
+  state = { flow: '' }
 
   componentDidMount() {
     loginApi.login({}, rspData => {
-      const id = rspData.id === 'unlogin' ? 1 : Number(rspData.id)
-      const name = rspData.name === '' ? '超级管理员' : String(rspData.name)
-      this.setState({ id: id, name: name })
+      const id = rspData.id === 'unlogin' ? 9999 : Number(rspData.id)
+      const name = rspData.name === 'unlogin' ? '游客' : String(rspData.name)
+      const flow = <UserContext.Provider value={{ userID: id, userName: name, userPermission: rspData.permission }}>
+        <Router basename="/flow">
+          <App />
+        </Router>
+      </UserContext.Provider>
+      this.setState({ flow: flow })
     })
   }
 
   render() {
     return (
-      <div>
         <ConfigProvider locale={zhCN}>
           <MediaQuery minDeviceWidth={1224}>
             <ScreenContext.Provider value={{ device: "pc" }}>
-              <UserContext.Provider value={{ userID: this.state.id, userName: this.state.name }}>
-                <Router basename="/flow">
-                  <App />
-                </Router>
-              </UserContext.Provider>
+              {this.state.flow}
             </ScreenContext.Provider>
           </MediaQuery>
           <MediaQuery maxDeviceWidth={1224}>
             <ScreenContext.Provider value={{ device: "mobile" }}>
-              <UserContext.Provider value={{ userID: this.state.id, userName: this.state.name }}>
-                <Router basename="/flow">
-                  <App />
-                </Router>
-              </UserContext.Provider>
+              {this.state.flow}
             </ScreenContext.Provider>
           </MediaQuery>
         </ConfigProvider>
-      </div>
     )
   }
 

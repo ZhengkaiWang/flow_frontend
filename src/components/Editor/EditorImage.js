@@ -7,7 +7,7 @@ class EditorImage extends React.Component {
 
     const { imageLoading } = this.props.data
     return (
-      <div>
+      <>
         <Input.Search placeholder="搜索图片" onSearch={this.props.method.handleImageSearch} enterButton />
         <br />
         <br />
@@ -39,7 +39,7 @@ class EditorImage extends React.Component {
         simple
         onChange={this.props.method.handleImagePage}
       />
-      </div>
+      </ >
     )
   }
 }

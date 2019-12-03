@@ -6,7 +6,7 @@ import { Timeline, Icon, Input, Cascader, Pagination } from 'antd'
 import Chat from './Chat'
 
 const News = props =>
-  <div>
+  <>
     <ContentHeader
       data={{ link: '/news/', title: '新闻信息流' }}
       components={{
@@ -59,7 +59,7 @@ const News = props =>
       onChange={props.method.hanglePage}
     />
     <Chat></Chat>
-  </div>
+  </>
 
 
 export default News

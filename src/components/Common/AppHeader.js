@@ -2,98 +2,80 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Layout, Menu, Icon } from 'antd'
 import { ScreenContext } from '../../utils/Screen'
+import { UserContext } from '../../utils/User'
 
 const notification = params =>
-  params.key === 'notification'
+  params === 'notification'
     ? Notification.permission === "granted"
-      ? new Notification("Welcome to VMP FLOW!")
+      ? console.log('Welcome to VMP@HZ!')
       : Notification.requestPermission(permission =>
         permission === "granted"
           ? new Notification("Thx for granting! Welcome to VMP FLOW!")
           : null)
     : null
 
-
-
 class AppHeader extends React.Component {
-
-  static contextType = ScreenContext
-
+  componentDidMount() {
+    notification('notification')
+  }
   render() {
     return (
-      <Layout.Header 
-      style={this.context.device==="mobile"
-          ?{paddingLeft: 24}:{}}>
-        <Menu
-          onClick={notification}
-          selectedKeys={[]}
-          mode="horizontal"
-          theme="dark"
-          defaultSelectedKeys={['2']}
-          style={{lineHeight: '64px'}}
-        >
-
-          {/* <Menu.Item key="home">
-        <NavLink to="/">
-          <Icon type="home" />
-          Home
-          </NavLink>
-      </Menu.Item> */}
-
-          <Menu.Item key="news">
-            <NavLink to="/news/">
-              <Icon type="stock" />
-              News
-          </NavLink>
-          </Menu.Item>
-          <Menu.Item key="editor">
-            <NavLink to="/editor/">
-              <Icon type="edit" />
-              编辑
-          </NavLink>
-          </Menu.Item>
-          <Menu.Item key="check">
-            <NavLink to="/check/">
-              <Icon type="check-square" />
-              审核
-          </NavLink>
-          </Menu.Item>
-          <Menu.Item key="chat">
-            <NavLink to="/chat/">
-              <Icon type="message" />
-              聊天
-          </NavLink>
-          </Menu.Item>
-          {/* <Menu.SubMenu
-        title={
-          <span className="submenu-title-wrapper">
-            <Icon type="setting" />
-            管理
-            </span>
+      <ScreenContext.Consumer>
+        {context =>
+          <UserContext.Consumer>
+            {userContext =>
+              <Layout.Header
+                style={context.device === "mobile"
+                  ? { paddingLeft: 0 } : {}}
+              >
+                <Menu
+                  mode="horizontal"
+                  theme="dark"
+                  style={{ lineHeight: '64px' }}
+                  selectable={false}
+                >
+                  <Menu.Item key="news">
+                    <NavLink to="/news/">
+                      <Icon type="stock" />
+                      News
+                 </NavLink>
+                  </Menu.Item>
+                  {
+                    userContext.userPermission === 0
+                      ? <Menu.Item key="editor">
+                        <NavLink to="/editor/">
+                          <Icon type="edit" />
+                          编辑
+                        </NavLink>
+                      </Menu.Item>
+                      : null
+                  }
+                  {
+                    userContext.userPermission === 0
+                      ? <Menu.Item key="check">
+                        <NavLink to="/check/">
+                          <Icon type="check-square" />
+                          审核
+                        </NavLink>
+                      </Menu.Item>
+                      : null
+                  }
+                  {
+                    userContext.userPermission === 0
+                      ? <Menu.Item key="chat">
+                        <NavLink to="/chat/">
+                          <Icon type="message" />
+                          聊天后台
+                        </NavLink>
+                      </Menu.Item>
+                      : null
+                  }
+                </Menu>
+              </Layout.Header>
+            }
+          </UserContext.Consumer>
         }
-      >
-        <Menu.ItemGroup title="后台管理">
-          <Menu.Item key="editor">
-            <NavLink to="/editor/">
-              <Icon type="edit" />
-              编辑文章
-              </NavLink>
-          </Menu.Item>
-          <Menu.Item key="check">
-            <NavLink to="/check/">
-              <Icon type="check-square" />
-              审核文章
-              </NavLink>
-          </Menu.Item>
-        </Menu.ItemGroup>
-
-        <Menu.ItemGroup title="Others">
-          <Menu.Item key="notification">授权通知</Menu.Item>
-        </Menu.ItemGroup>
-      </Menu.SubMenu> */}
-
-        </Menu>
-      </Layout.Header>
+      </ScreenContext.Consumer>
 
     )
   }
