@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { UserContext } from '../../utils/User'
 import { Widget, addResponseMessage, addUserMessage } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
+import { notification } from 'antd'
 
 class Demo extends Component {
   static contextType = UserContext
@@ -39,7 +40,10 @@ class Demo extends Component {
 
   handleReceiveMsg = transferData => {
     if (transferData.type === 'conn') {
-      addResponseMessage("连接成功")
+      notification['info']({
+        message: '后台策略组研究员已在线',
+        description: `连接已建立，请开始对话`
+      });
     }
     else if (transferData.type === 'init') {
       this.setState({

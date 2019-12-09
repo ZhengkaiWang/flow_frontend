@@ -54,7 +54,7 @@ class ChatBack extends React.Component {
         nameMap: tmpNameMap
       })
       notification['info']({
-        message: transferData.messagePack.groupName,
+        message: `聊天后台 频道ID:${transferData.groupName}`,
         description: `${transferData.chatName}加入连接`
       });
     }
@@ -67,14 +67,14 @@ class ChatBack extends React.Component {
         nameMap: tmpNameMap
       })
       notification['info']({
-        message: transferData.messagePack.groupName,
+        message: `聊天后台 频道ID:${transferData.groupName}`,
         description: `${transferData.chatName}加入连接`
       });
     }
     else if(transferData.type === 'del') {
       notification['info']({
-        message: this.state.nameMap[transferData.groupName],
-        description: transferData.messagePack.message
+        message:  `聊天后台 频道ID:${transferData.groupName}`,
+        description: `${transferData.chatName}退出连接`
       });
       delete tmpNameMap[transferData.groupName]
       delete tmpMessageSet[transferData.groupName]
