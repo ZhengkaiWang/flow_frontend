@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { UserContext } from '../../utils/User'
-import { Widget, addResponseMessage } from 'react-chat-widget';
+import { Widget, addResponseMessage, addUserMessage } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
 
 class Demo extends Component {
@@ -12,16 +12,15 @@ class Demo extends Component {
       newMessagesCount: 0,
       isOpen: false,
       status: 'disconnect',
-      receiver: {id: undefined, name: undefined }
+      receiver: { id: undefined, name: undefined }
     };
   }
 
   componentWillUnmount() {
-    return this.ws===undefined?null:this.ws.close()
+    return this.ws === undefined ? null : this.ws.close()
   }
 
   handleClick = () => {
-    
   }
 
   handleInit = () => {
@@ -32,46 +31,39 @@ class Demo extends Component {
         this.handleReceiveMsg(JSON.parse(evt.data))
       }
       this.ws.onopen = () => {
-        this.ws.send(JSON.stringify({
-          status: 200,
-          type: 'init',
-          other: '',
-          groupName: this.context.userID,
-          messagePack: {
-            receiver: { id: "receiverUserID", name: "receiverUserName" },
-            sender: { id: this.context.userID, name: this.context.userName },
-            message: 'Init chat channel',
-            date: "date",
-            index: 0
-          },
-        }))
         this.setState({ status: 'connected' })
       }
     }
-    this.setState({isOpen: !this.state.isOpen})
+    this.setState({ isOpen: !this.state.isOpen })
   }
 
   handleReceiveMsg = transferData => {
-    //处理收到信息的逻辑
-    transferData.type === 'init'
-      ? this.setState({
-        messageList: [],
+    if (transferData.type === 'conn') {
+      addResponseMessage("连接成功")
+    }
+    else if (transferData.type === 'init') {
+      this.setState({
+        messageList: transferData.other.history,
         receiver: {
-          id: transferData.messagePack.sender.id,
-          name: transferData.messagePack.sender.name,
+          id: transferData.groupName,
+          name: transferData.chatName,
         }
       })
-      : this.setState({
+      transferData.other.history.map(item=>
+        item.sender.id===this.context.userID
+        ?addUserMessage(item.message)
+        :addResponseMessage(item.message))
+    }
+    else if (transferData.type === 'message') {
+      this.setState({
         messageList: [...this.state.messageList, [transferData.messagePack]],
         newMessagesCount: this.state.isOpen ? 0 : this.state.newMessagesCount + 1
       })
-    addResponseMessage(
-      String(transferData.messagePack.message))
-    return transferData.type === 'init'
-      ? null
-      : new Notification("VMP@HZ团队", {
+      addResponseMessage(transferData.messagePack.message)
+      new Notification("VMP@HZ团队", {
         body: transferData.messagePack.message
       })
+    }
   }
 
   handleSendMsg = message => {
@@ -98,7 +90,6 @@ class Demo extends Component {
   }
 
 
-
   render() {
     return (
       <div onClick={this.handleInit}>
@@ -106,7 +97,7 @@ class Demo extends Component {
           handleNewUserMessage={this.handleSendMsg}
           //badge={this.state.newMessagesCount}
           title="Chat with VMP@hzinsights"
-          subtitle="潘老师"
+          subtitle="策略组"
         />
       </div>
     )

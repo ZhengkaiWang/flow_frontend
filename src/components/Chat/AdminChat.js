@@ -23,6 +23,20 @@ class ChatBack extends React.Component {
 
   componentDidMount() {
     this.adminWS = new WebSocket(`ws://127.0.0.1:8000/ws/admin/${this.context.userID}`)
+    // this.adminWS.onopen = () => 
+    //   this.adminWS.send(JSON.stringify({
+    //     status: 200,
+    //     type: 'init',
+    //     other: '',
+    //     groupName: this.context.userID,
+    //     messagePack: {
+    //       receiver: { id: "receiverUserID", name: "receiverUserName" },
+    //       sender: { id: this.context.userID, name: this.context.userName },
+    //       message: 'Init admin channel',
+    //       date: "date",
+    //       index: 0
+    //     },
+    //   }))
     this.adminWS.onmessage = evt =>
       this.handleReceiveMsg(JSON.parse(evt.data))
   }
@@ -32,15 +46,29 @@ class ChatBack extends React.Component {
     const tmpMessageSet = this.state.messageSet
     const tmpNameMap = this.state.nameMap
     if (transferData.type === 'init') {
-      tmpNameMap[transferData.messagePack.sender.id] = transferData.messagePack.sender.name
+      tmpNameMap[transferData.groupName] = transferData.chatName
+      // eslint-disable-next-line no-eval
+      tmpMessageSet[transferData.groupName] = eval(transferData.other.history)
+      this.setState({
+        messageSet: tmpMessageSet,
+        nameMap: tmpNameMap
+      })
+      notification['info']({
+        message: transferData.messagePack.groupName,
+        description: `${transferData.chatName}加入连接`
+      });
+    }
+    else if(transferData.type === 'conn') {
+      tmpNameMap[transferData.groupName] = transferData.chatName
+      // eslint-disable-next-line no-eval
       tmpMessageSet[transferData.groupName] = []
       this.setState({
         messageSet: tmpMessageSet,
         nameMap: tmpNameMap
       })
       notification['info']({
-        message: transferData.messagePack.sender.name,
-        description: transferData.messagePack.message
+        message: transferData.messagePack.groupName,
+        description: `${transferData.chatName}加入连接`
       });
     }
     else if(transferData.type === 'del') {
