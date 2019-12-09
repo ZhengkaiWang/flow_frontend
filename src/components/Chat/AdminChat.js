@@ -58,10 +58,10 @@ class ChatBack extends React.Component {
         description: `${transferData.chatName}加入连接`
       });
     }
-    else if(transferData.type === 'conn') {
+    else if (transferData.type === 'conn') {
       tmpNameMap[transferData.groupName] = transferData.chatName
       // eslint-disable-next-line no-eval
-      tmpMessageSet[transferData.groupName] = []
+      //tmpMessageSet[transferData.groupName] = []
       this.setState({
         messageSet: tmpMessageSet,
         nameMap: tmpNameMap
@@ -71,9 +71,9 @@ class ChatBack extends React.Component {
         description: `${transferData.chatName}加入连接`
       });
     }
-    else if(transferData.type === 'del') {
+    else if (transferData.type === 'del') {
       notification['info']({
-        message:  `聊天后台 频道ID:${transferData.groupName}`,
+        message: `聊天后台 频道ID:${transferData.groupName}`,
         description: `${transferData.chatName}退出连接`
       });
       delete tmpNameMap[transferData.groupName]
@@ -83,7 +83,19 @@ class ChatBack extends React.Component {
         nameMap: tmpNameMap
       })
     }
-    else {
+    else if (transferData.type === 'untouched') {
+      tmpNameMap[transferData.groupName] = transferData.chatName
+      tmpMessageSet[transferData.groupName] = transferData.messagePack
+      this.setState({
+        messageSet: tmpMessageSet,
+        nameMap: tmpNameMap
+      })
+      notification['info']({
+        message: `聊天后台 频道ID:${transferData.groupName}`,
+        description: `${transferData.chatName}未读消息`
+      });
+     }
+    else if (transferData.type === 'message') {
       tmpMessageSet[transferData.groupName] =
         [...tmpMessageSet[transferData.groupName], transferData.messagePack]
       this.setState({ messageSet: tmpMessageSet })

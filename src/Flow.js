@@ -15,7 +15,7 @@ class Flow extends React.Component {
   componentDidMount() {
     loginApi.login({}, rspData => {
       const id = rspData.id === 'unlogin' ? 9999 : Number(rspData.id)
-      const name = rspData.name === 'unlogin' ? '游客' : String(rspData.name)
+      const name = rspData.name === 'unlogin' || rspData.name === ''  ? '游客' : String(rspData.name)
       const flow = <UserContext.Provider value={{ userID: id, userName: name, userPermission: rspData.permission }}>
         <Router basename="/flow">
           <App />
