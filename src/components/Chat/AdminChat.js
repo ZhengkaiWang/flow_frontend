@@ -61,7 +61,10 @@ class ChatBack extends React.Component {
     else if (transferData.type === 'conn') {
       tmpNameMap[transferData.groupName] = transferData.chatName
       // eslint-disable-next-line no-eval
-      //tmpMessageSet[transferData.groupName] = []
+      tmpMessageSet[transferData.groupName]=
+        tmpMessageSet[transferData.groupName]===undefined
+        ?[]
+        :tmpMessageSet[transferData.groupName]
       this.setState({
         messageSet: tmpMessageSet,
         nameMap: tmpNameMap
