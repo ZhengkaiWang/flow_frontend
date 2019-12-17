@@ -44,6 +44,13 @@ class Demo extends Component {
         message: '后台策略组研究员已在线',
         description: `连接已建立，请开始对话`
       });
+      // this.setState({
+      //   messageList: transferData.other.history,
+      //   receiver: {
+      //     id: transferData.groupName,
+      //     name: transferData.chatName,
+      //   }
+      // })
     }
     else if (transferData.type === 'init') {
       this.setState({
