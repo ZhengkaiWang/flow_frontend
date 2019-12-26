@@ -16,8 +16,8 @@ class ContentHeader extends React.Component {
           borderBottom: '1px solid rgb(235, 237, 240)',
         }}
         title={<Link style={{ color: 'rgba(0, 0, 0, 0.85)' }} to={this.props.data.link}>{this.props.data.title}</Link>}
-        //subTitle={`Power by VMP@HZ`}
-        subTitle={`Hi, ${this.context.userName}`}
+        subTitle={`Power by VMP@HZ`}
+        //subTitle={`Hi, ${this.context.userName}`}
         extra={this.props.components && this.props.components.extra}
       >
       </PageHeader>
